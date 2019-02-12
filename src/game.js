@@ -86,12 +86,14 @@ function create ()
   this.physics.add.collider(enemy, platforms);
   this.physics.add.collider(enemy, player);
 
-  scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+  scoreText = this.add.text(16, 16, 'Le Pew Pews: 0', { fontSize: '32px', fill: '#FFF' });
 
 }
 
 function update (){
   // console.log(this.scene)
+  // debugger
+  this.physics.moveToObject(enemy,player,60,3*1000);
   cursors = this.input.keyboard.createCursorKeys();
     if (cursors.left.isDown)
   {
@@ -121,6 +123,6 @@ function update (){
 
 // function chase(enemy){
 //   console.log()
-//   // this.physis.Arcade.moveToObject(enemy,player,60,10*1000);
+//   // this.physics.Arcade.moveToObject(enemy,player,60,10*1000);
 //     // Phaser.Physics.Arcade.moveToObject(enemy,player,60,1*1000);
 // }
