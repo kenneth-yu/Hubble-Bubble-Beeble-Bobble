@@ -43,6 +43,18 @@ function create ()
   enemy.setBounce(0);
   enemy.setCollideWorldBounds(true);
 
+  this.anims.create({
+    key: 'greenleft',
+    frames: this.anims.generateFrameNumbers('greendragon', { start: 4, end: 6}),
+    frameRate: 10,
+    // repeat: -1
+  });
+  this.anims.create({
+      key: 'greenright',
+      frames: this.anims.generateFrameNumbers('greendragon', { start: 24, end: 26 }),
+      frameRate: 10,
+      // repeat: -1
+  });
 
   this.anims.create({
     key: 'left',
@@ -117,6 +129,23 @@ function update (){
      // console.log("i tried to jump")
       player.setVelocityY(-320);
   }
+
+  // else if (cursors.right.isDown) {
+  // }
+
+  if (Math.round(enemy.x / 100)*100 > Math.round(player.x / 100)*100) {
+    enemy.setVelocityX(-150);
+    enemy.anims.play('greenleft', true);
+  }  else if (Math.round(enemy.x / 100)*100 < Math.round(player.x / 100)*100)
+  {
+    enemy.setVelocityX(150);
+    enemy.anims.play('greenright', true);
+    // enemy.setVelocityX(0);
+    // player.anims.play('turnRight');
+  } else if (Math.floor(enemy.y / 100)*100 > Math.floor(player.y / 100)*100 && enemy.body.touching.down){
+    setTimeout(function() {enemy.setVelocityY(-240)}, 300);
+  }
+
 }
 
 // function chase(enemy){
