@@ -17,12 +17,16 @@ var config = {
 };
 
 var game = new Phaser.Game(config);
+console.log(game)
+var score = 0;
+var scoreText;
 
 
 function preload ()
 {
-  // this.load.spritesheet('dude', '../images/dude.png', { frameWidth: 32, frameHeight: 48 });
-  this.load.spritesheet('dude', '../images/bluedragon.png', { frameWidth: 64, frameHeight: 64});
+  //GET FROM RAILS API
+  this.load.spritesheet('bluedragon', '../images/bluedragon.png', { frameWidth: 64, frameHeight: 64});
+  this.load.spritesheet('greendragon', '../images/greendragon.png',{ frameWidth: 64, frameHeight: 64});
   this.load.image('ground', '../images/platform.png');
   this.load.image('background', '../images/background2.png');
 }
@@ -31,34 +35,45 @@ function create ()
 {
   bg = this.add.tileSprite(0, 0, 1600, 1200, 'background');
 
-  player = this.physics.add.sprite(100, 450, 'dude');
-  player.setBounce(0.2);
+  player = this.physics.add.sprite(100, 450, 'bluedragon');
+  player.setBounce(0);
   player.setCollideWorldBounds(true);
+
+  enemy = this.physics.add.sprite(600, 450, 'greendragon');
+  enemy.setBounce(0);
+  enemy.setCollideWorldBounds(true);
+
 
   this.anims.create({
     key: 'left',
-    frames: this.anims.generateFrameNumbers('dude', { start: 4, end: 6}),
+    frames: this.anims.generateFrameNumbers('bluedragon', { start: 4, end: 6}),
     frameRate: 10,
-    repeat: -1
+    // repeat: -1
   });
 
   this.anims.create({
     key: 'turnLeft',
-    frames: [ { key: 'dude', frame: 0 } ],
+    frames: [ { key: 'bluedragon', frame: 0 } ],
     frameRate: 20
   });
 
   this.anims.create({
       key: 'turnRight',
-      frames: [ { key: 'dude', frame: 20 } ],
+      frames: [ { key: 'bluedragon', frame: 20 } ],
       frameRate: 20
   });
 
   this.anims.create({
+    key: 'up',
+    frames: [ { key: 'bluedragon', frame:12}],
+    frameRate: 20
+  })
+
+  this.anims.create({
       key: 'right',
-      frames: this.anims.generateFrameNumbers('dude', { start: 24, end: 26 }),
+      frames: this.anims.generateFrameNumbers('bluedragon', { start: 24, end: 26 }),
       frameRate: 10,
-      repeat: -1
+      // repeat: -1
   });
 
   platforms = this.physics.add.staticGroup();
@@ -68,43 +83,44 @@ function create ()
   platforms.create(750, 220, 'ground');
 
   this.physics.add.collider(player, platforms);
+  this.physics.add.collider(enemy, platforms);
+  this.physics.add.collider(enemy, player);
+
+  scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
 
 }
 
 function update (){
+  // console.log(this.scene)
   cursors = this.input.keyboard.createCursorKeys();
     if (cursors.left.isDown)
   {
     // console.log("i tried to move left")
-      player.setVelocityX(-160);
-
+    // chase(enemy)
+      player.setVelocityX(-250);
       player.anims.play('left', true);
   }
   else if (cursors.right.isDown)
   {
     // console.log("i tried to move right")
-      player.setVelocityX(160);
-
+      player.setVelocityX(250);
       player.anims.play('right', true);
   }
-  // else
-  // {
-  //     player.setVelocityX(0);
-  //     //
-  //     // player.anims.play('turn');
-  // }
-  else if (cursors.left.isUp){
-    console.log("hi")
-    player.setVelocityX(0);
-    player.anims.play('turnLeft', true);
+  else
+  {
+      player.setVelocityX(0);
+      // player.anims.play('turnRight');
   }
-  else if (cursors.right.isUp){
-    player.setVelocityX(0);
-    player.anims.play('turnRight', true);
-  }
+
   if (cursors.up.isDown && player.body.touching.down)
   {
      // console.log("i tried to jump")
-      player.setVelocityY(-330);
+      player.setVelocityY(-320);
   }
 }
+
+// function chase(enemy){
+//   console.log()
+//   // this.physis.Arcade.moveToObject(enemy,player,60,10*1000);
+//     // Phaser.Physics.Arcade.moveToObject(enemy,player,60,1*1000);
+// }
