@@ -31,6 +31,7 @@ function preload ()
   this.load.spritesheet('bluebubbles', '../images/bluebubbles.png',{ frameWidth: 55, frameHeight: 62});
   this.load.image('ground', '../images/platform.png');
   this.load.image('background', '../images/background2.png');
+  // this.load.image('projectile', '../images/greenbubbles.png', {frameWidth: 64, frameHeight: 64});
 
 
   this.load.spritesheet('enemy', '../images/enemiesNew.png', { frameWidth: 64, frameHeight: 64});
@@ -135,11 +136,21 @@ function create ()
   platforms.create(50, 250, 'ground');
   platforms.create(750, 220, 'ground');
 
-
   this.physics.add.collider(player, platforms);
   this.physics.add.collider(enemy, platforms);
   this.physics.add.collider(realEnemy, platforms);
   this.physics.add.collider(enemy, player);
+  this.physics.add.collider(player, realEnemy);
+
+  // this.physics.add.collider(bullet, realEnemy);
+  // realEnemy.body.onCollide = new Phaser.Signal();
+  // realEnemy.body.onCollide.add(hitSprite, this);
+
+
+  function hitSprite() {
+    realEnemy.destroy();
+  }
+
 
   scoreText = this.add.text(16, 16, 'Le Pew Pews: 0', { fontSize: '32px', fill: '#FFF' });
 
@@ -151,14 +162,12 @@ function create ()
         Phaser.GameObjects.Image.call(this, scene, 10, 10, 'bluebubbles');
         this.speed = Phaser.Math.GetSpeed(400, 1);
     },
-
     fire: function (x, y)
     {
         this.setPosition(x - 50, y );
         this.setActive(true);
         this.setVisible(true);
     },
-
     update: function (time, delta)
     {
         this.x -= this.speed * delta;
@@ -178,44 +187,45 @@ bullets = this.add.group({
 });
 speed = Phaser.Math.GetSpeed(300, 1);
 
+var bullet = bullets.get();
+this.physics.add.collider(bullet, enemy);
 }
 
-function update (time){
+function update (time) {
   // console.log(this.scene)
   // debugger
   // this.physics.moveToObject(enemy,player,60,3*1000);
+  // var bullet;
+
+
   var cursors = this.input.keyboard.createCursorKeys();
   var spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-    var zButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
-    if (cursors.left.isDown)
-  {
+  var zButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
+  if (cursors.left.isDown) {
     // console.log("i tried to move left")
     // chase(enemy)
       player.setVelocityX(-250);
       player.anims.play('left', true);
   }
-  else if (cursors.right.isDown)
-  {
+  else if (cursors.right.isDown) {
     // console.log("i tried to move right")
       player.setVelocityX(250);
       player.anims.play('right', true);
   }
   else if (spaceBar.isDown&& time > lastFired){
     player.anims.play('pew', true);
-    var bullet = bullets.get();
+    bullet = bullets.get();
     if (bullet){
         bullet.fire(player.x, player.y);
         lastFired = time + 1000;
     }
   }
-  else
-  {
+  else {
       player.setVelocityX(0);
       // player.anims.play('turnRight');
   }
 
-  if (cursors.up.isDown && player.body.touching.down)
-  {
+  if (cursors.up.isDown && player.body.touching.down) {
      // console.log("i tried to jump")
       player.body.checkCollision.up = false
       player.setVelocityY(-320);
@@ -247,7 +257,6 @@ function update (time){
   }
 
   // Real Enemy Chase
-  // debugger
   array.forEach(realEnemy => {
     if (Math.round(realEnemy.x / 100)*100 > Math.round(player.x / 100)*100) {
       realEnemy.setVelocityX(-200);
@@ -258,21 +267,23 @@ function update (time){
     } else if (Math.floor(realEnemy.y / 100)*100 > Math.floor(player.y / 100)*100 && realEnemy.body.touching.down) {
       setTimeout(function() {realEnemy.setVelocityY(-240)}, 300);
     }
+    // if (!realEnemy.body.touching.up) {
+    //   // realEnemy.destroy()
+    //   console.log("touch");
+    // }
   })
   // Real Enemy end
 
   // New Enemy Spawning
-
   if (Phaser.Input.Keyboard.JustDown(zButton)) {
     const newEnemy = this.physics.add.sprite(200, 300, 'enemy');
-    newEnemy.setBounce(0);
+    // newEnemy.setBounce(0);
     newEnemy.setCollideWorldBounds(true);
     //
     this.physics.add.collider(newEnemy, platforms);
+    this.physics.add.collider(newEnemy, player);
     array.push(newEnemy)
   }
-
-
 
 }
 
