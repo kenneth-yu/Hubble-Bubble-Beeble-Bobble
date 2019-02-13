@@ -19,6 +19,7 @@ var config = {
 var game = new Phaser.Game(config);
 var score = 0;
 var scoreText;
+var lastFired = 0;
 
 
 function preload ()
@@ -26,6 +27,7 @@ function preload ()
   //GET FROM RAILS API
   this.load.spritesheet('bluedragon', '../images/bluedragon.png', { frameWidth: 64, frameHeight: 64});
   this.load.spritesheet('greendragon', '../images/greendragon.png',{ frameWidth: 64, frameHeight: 64});
+  this.load.spritesheet('bluebubbles', '../images/bluebubbles.png',{ frameWidth: 55, frameHeight: 62});
   this.load.image('ground', '../images/platform.png');
   this.load.image('background', '../images/background2.png');
 }
@@ -86,11 +88,17 @@ function create ()
       frameRate: 10,
       // repeat: -1
   });
-
   this.anims.create({
     key: 'pew',
     // frames: this.anims.generateFrameNumbers('bluedragon', {start: 8, end: 13}),
     frames: this.anims.generateFrameNumbers('bluedragon', { frames: [ 8, 9, 10, 11, 10, 9, 8, 0]}),
+    frameRate: 20,
+    // repeat:
+  })
+  this.anims.create({
+    key: 'bubbles',
+    // frames: this.anims.generateFrameNumbers('bluedragon', {start: 8, end: 13}),
+    frames: this.anims.generateFrameNumbers('bluebubbles', { start:0 , end:10}),
     frameRate: 20,
     // repeat:
   })
@@ -100,7 +108,7 @@ function create ()
   platforms.create(600, 400, 'ground')
   platforms.create(50, 250, 'ground');
   platforms.create(750, 220, 'ground');
-  
+
 
   this.physics.add.collider(player, platforms);
   this.physics.add.collider(enemy, platforms);
@@ -108,9 +116,44 @@ function create ()
 
   scoreText = this.add.text(16, 16, 'Le Pew Pews: 0', { fontSize: '32px', fill: '#FFF' });
 
+  var Bullet = new Phaser.Class({
+    Extends: Phaser.GameObjects.Image,
+    initialize:
+    function Bullet (scene)
+    {
+        Phaser.GameObjects.Image.call(this, scene, 10, 10, 'bluebubbles');
+        this.speed = Phaser.Math.GetSpeed(400, 1);
+    },
+
+    fire: function (x, y)
+    {
+        this.setPosition(x - 50, y );
+        this.setActive(true);
+        this.setVisible(true);
+    },
+
+    update: function (time, delta)
+    {
+        this.x -= this.speed * delta;
+        if (this.x < -50)
+        {
+            this.setActive(false);
+            this.setVisible(false);
+        }
+    }
+
+});
+
+bullets = this.add.group({
+    classType: Bullet,
+    maxSize: 10,
+    runChildUpdate: true
+});
+speed = Phaser.Math.GetSpeed(300, 1);
+
 }
 
-function update (){
+function update (time){
   // console.log(this.scene)
   // debugger
   // this.physics.moveToObject(enemy,player,60,3*1000);
@@ -129,8 +172,13 @@ function update (){
       player.setVelocityX(250);
       player.anims.play('right', true);
   }
-  else if (spaceBar.isDown){
+  else if (spaceBar.isDown&& time > lastFired){
     player.anims.play('pew', true);
+    var bullet = bullets.get();
+    if (bullet){
+        bullet.fire(player.x, player.y);
+        lastFired = time + 1000;
+    }
   }
   else
   {
