@@ -20,6 +20,7 @@ var game = new Phaser.Game(config);
 var score = 0;
 var scoreText;
 var lastFired = 0;
+var array;
 
 
 function preload ()
@@ -44,6 +45,7 @@ function create ()
   player.setBounce(0);
   player.setCollideWorldBounds(true);
 
+  // Green Friend
   enemy = this.physics.add.sprite(600, 450, 'greendragon');
   enemy.setBounce(0);
   enemy.setCollideWorldBounds(true);
@@ -52,6 +54,9 @@ function create ()
   realEnemy = this.physics.add.sprite(200, 300, 'enemy');
   realEnemy.setBounce(0);
   realEnemy.setCollideWorldBounds(true);
+
+  array = [realEnemy]
+  // debugger
 
   // Robo Enemy, left and right animation
   this.anims.create({
@@ -181,6 +186,7 @@ function update (time){
   // this.physics.moveToObject(enemy,player,60,3*1000);
   var cursors = this.input.keyboard.createCursorKeys();
   var spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+    var zButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
     if (cursors.left.isDown)
   {
     // console.log("i tried to move left")
@@ -241,19 +247,30 @@ function update (time){
   }
 
   // Real Enemy Chase
-  if (Math.round(realEnemy.x / 100)*100 > Math.round(player.x / 100)*100) {
-    realEnemy.setVelocityX(-200);
-    realEnemy.anims.play('enemyleft', true);
-  } else if (Math.round(realEnemy.x / 100)*100 < Math.round(player.x / 100)*100) {
-    realEnemy.setVelocityX(200);
-    realEnemy.anims.play('enemyright', true);
-    // realEnemy.setVelocityX(0);
-    // player.anims.play('turnRight');
-  } else if (Math.floor(realEnemy.y / 100)*100 > Math.floor(player.y / 100)*100 && realEnemy.body.touching.down) {
-    setTimeout(function() {realEnemy.setVelocityY(-240)}, 300);
-  }
+  // debugger
+  array.forEach(realEnemy => {
+    if (Math.round(realEnemy.x / 100)*100 > Math.round(player.x / 100)*100) {
+      realEnemy.setVelocityX(-200);
+      realEnemy.anims.play('enemyleft', true);
+    } else if (Math.round(realEnemy.x / 100)*100 < Math.round(player.x / 100)*100) {
+      realEnemy.setVelocityX(200);
+      realEnemy.anims.play('enemyright', true);
+    } else if (Math.floor(realEnemy.y / 100)*100 > Math.floor(player.y / 100)*100 && realEnemy.body.touching.down) {
+      setTimeout(function() {realEnemy.setVelocityY(-240)}, 300);
+    }
+  })
   // Real Enemy end
 
+  // New Enemy Spawning
+
+  if (Phaser.Input.Keyboard.JustDown(zButton)) {
+    const newEnemy = this.physics.add.sprite(200, 300, 'enemy');
+    newEnemy.setBounce(0);
+    newEnemy.setCollideWorldBounds(true);
+    //
+    this.physics.add.collider(newEnemy, platforms);
+    array.push(newEnemy)
+  }
 
 
 
