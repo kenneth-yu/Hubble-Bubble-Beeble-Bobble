@@ -29,6 +29,10 @@ function preload ()
   this.load.spritesheet('greendragon', '../images/greendragon.png',{ frameWidth: 64, frameHeight: 64});
   this.load.image('ground', '../images/platform.png');
   this.load.image('background', '../images/background2.png');
+
+
+  this.load.spritesheet('enemy', '../images/enemiesNew.png', { frameWidth: 64, frameHeight: 64});
+
 }
 
 function create ()
@@ -43,6 +47,26 @@ function create ()
   enemy.setBounce(0);
   enemy.setCollideWorldBounds(true);
 
+  // Robo Enemy
+  realEnemy = this.physics.add.sprite(200, 300, 'enemy');
+  realEnemy.setBounce(0);
+  realEnemy.setCollideWorldBounds(true);
+
+  // Robo Enemy, left and right animation
+  this.anims.create({
+    key: 'enemyleft',
+    frames: this.anims.generateFrameNumbers('enemy', { start: 0, end: 1}),
+    frameRate: 10,
+    // repeat: -1
+  });
+  this.anims.create({
+      key: 'enemyright',
+      frames: this.anims.generateFrameNumbers('enemy', { start: 2, end: 3 }),
+      frameRate: 10,
+      // repeat: -1
+  });
+
+  // Green Dragon Friend, left and right animation
   this.anims.create({
     key: 'greenleft',
     frames: this.anims.generateFrameNumbers('greendragon', { start: 4, end: 6}),
@@ -56,31 +80,28 @@ function create ()
       // repeat: -1
   });
 
+  // Blue Dragon (self)
   this.anims.create({
     key: 'left',
     frames: this.anims.generateFrameNumbers('bluedragon', { start: 4, end: 6}),
     frameRate: 10,
     // repeat: -1
   });
-
   this.anims.create({
     key: 'turnLeft',
     frames: [ { key: 'bluedragon', frame: 0 } ],
     frameRate: 20
   });
-
   this.anims.create({
       key: 'turnRight',
       frames: [ { key: 'bluedragon', frame: 20 } ],
       frameRate: 20
   });
-
   this.anims.create({
     key: 'up',
     frames: [ { key: 'bluedragon', frame:12}],
     frameRate: 20
   })
-
   this.anims.create({
       key: 'right',
       frames: this.anims.generateFrameNumbers('bluedragon', { start: 24, end: 26 }),
@@ -96,6 +117,7 @@ function create ()
 
   this.physics.add.collider(player, platforms);
   this.physics.add.collider(enemy, platforms);
+  this.physics.add.collider(realEnemy, platforms);
   this.physics.add.collider(enemy, player);
 
   scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
@@ -145,6 +167,23 @@ function update (){
   } else if (Math.floor(enemy.y / 100)*100 > Math.floor(player.y / 100)*100 && enemy.body.touching.down){
     setTimeout(function() {enemy.setVelocityY(-240)}, 300);
   }
+
+  // Real Enemy Chase
+  if (Math.round(realEnemy.x / 100)*100 > Math.round(player.x / 100)*100) {
+    realEnemy.setVelocityX(-200);
+    realEnemy.anims.play('enemyleft', true);
+  } else if (Math.round(realEnemy.x / 100)*100 < Math.round(player.x / 100)*100) {
+    realEnemy.setVelocityX(200);
+    realEnemy.anims.play('enemyright', true);
+    // realEnemy.setVelocityX(0);
+    // player.anims.play('turnRight');
+  } else if (Math.floor(realEnemy.y / 100)*100 > Math.floor(player.y / 100)*100 && realEnemy.body.touching.down) {
+    setTimeout(function() {realEnemy.setVelocityY(-240)}, 300);
+  }
+  // Real Enemy end
+
+
+
 
 }
 
