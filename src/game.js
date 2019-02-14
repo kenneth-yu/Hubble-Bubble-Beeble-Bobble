@@ -159,7 +159,7 @@ function create ()
     // this.physics.add.overlap(player, stars, collectStar, null, this);
   //
 
-  scoreText = this.add.text(16, 16, 'Le Pew Pews: 0', { fontSize: '32px', fill: '#FFF' });
+  scoreText = this.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#FFF' });
 }
 
 function hitSprite(bubble, enemy) {
@@ -286,7 +286,7 @@ function update (time) {
   // })
 
   // New Enemy Spawning
-  if (arrayOfEnemies.length < 2) {
+  if (arrayOfEnemies.length < 1) {
     let w = Math.random() * (800 - 100) + 100;
     let h = Math.random() * (500 - 100) + 100;
     const newEnemy = this.physics.add.sprite(w, h, 'enemy');
