@@ -40,6 +40,7 @@ function preload ()
 
 
   this.load.spritesheet('enemy', '../images/enemiesNew.png', { frameWidth: 64, frameHeight: 64});
+  this.load.spritesheet('roboDeath', '../images/roboDeath.png', { frameWidth: 64, frameHeight: 64});
 
 }
 
@@ -75,6 +76,12 @@ function create ()
   this.anims.create({
       key: 'enemyright',
       frames: this.anims.generateFrameNumbers('enemy', { start: 2, end: 3 }),
+      frameRate: 10,
+      // repeat: -1
+  });
+  this.anims.create({
+      key: 'roboDeath',
+      frames: this.anims.generateFrameNumbers('roboDeath', { start: 0, end: 3 }),
       frameRate: 10,
       // repeat: -1
   });
@@ -174,7 +181,12 @@ function hitSprite(bubble, enemy) {
   } else {
     arrayOfEnemies.pop();
   }
-  enemy.destroy();
+  enemy.anims.play('roboDeath', true)
+  setTimeout(function(){
+    // setTimeout(function(){
+      enemy.destroy();
+    // }, 1000)
+  }, 800)
 
   // Kill Bubble on Hit
   let bubbleIndex = arrayOfBubbles.indexOf(bubble);
@@ -236,7 +248,18 @@ function update (time) {
     newBubble.body.setAllowGravity(false);
     newBubble.body.onWorldBounds = true;
     arrayOfBubbles.push(newBubble)
-    // debugger
+    setTimeout(()=> {
+      if (!!newBubble) {
+        let bubbleIndex = arrayOfBubbles.indexOf(newBubble);
+        newBubble.setVelocity(0);
+        if (bubbleIndex > -1) {
+          arrayOfBubbles.splice(bubbleIndex, 1);
+        } else {
+          arrayOfBubbles.pop();
+        }
+        newBubble.destroy();
+      }
+    }, 900)
 
     if (direction === 'left'){
       // console.log('i am facing left')
@@ -336,7 +359,7 @@ function update (time) {
   //   arrayOfEnemies.push(newEnemy)
   // }
 
-if (arrayOfBubbles.length > 0) {
+  if (arrayOfBubbles.length > 0) {
   arrayOfBubbles.forEach(bubble => {
     // debugger
     if (bubble.body.checkWorldBounds()) {
