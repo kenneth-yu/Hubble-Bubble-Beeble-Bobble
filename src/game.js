@@ -47,7 +47,6 @@ function preload ()
   this.load.audio('shootbubble', '../audio/shootbubble.mp3');
   // this.load.image('projectile', '../images/greenbubbles.png', {frameWidth: 64, frameHeight: 64});
 
-
   this.load.spritesheet('enemy', '../images/enemiesNew.png', { frameWidth: 64, frameHeight: 64});
   this.load.spritesheet('roboDeath', '../images/roboDeath.png', { frameWidth: 64, frameHeight: 64});
 
@@ -164,6 +163,13 @@ function create ()
     frameRate: 15,
     // repeat:
   })
+  this.anims.create({
+    key: 'bubblepop',
+    // frames: this.anims.generateFrameNumbers('bluedragon', {start: 8, end: 13}),
+    frames: this.anims.generateFrameNumbers('bluebubbles', { start:7 , end:10}),
+    frameRate: 15,
+    // repeat:
+  })
 
   platforms = this.physics.add.staticGroup();
   platforms.create(400, 568, 'ground').setScale(2).refreshBody();
@@ -204,9 +210,7 @@ function bubbleHitEnemy(bubble, enemy) {
     enemy.anims.play('roboDeathLeft', true)
   }
   setTimeout(function(){
-    // setTimeout(function(){
       enemy.destroy();
-    // }, 1000)
   }, 700)
 
   // Kill Bubble on Hit
@@ -217,7 +221,10 @@ function bubbleHitEnemy(bubble, enemy) {
   } else {
     arrayOfBubbles.pop();
   }
-  bubble.destroy();
+  bubble.anims.play('bubblepop', true)
+  setTimeout(function(){
+      bubble.destroy();
+  }, 300)
 
 
   // delete arrayOfBubbles[bubbleIndex];
