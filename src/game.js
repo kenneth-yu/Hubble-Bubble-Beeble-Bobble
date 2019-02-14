@@ -53,9 +53,8 @@ function preload ()
 
 }
 
-function create ()
-{
-  this.sound.play('theme')
+function create (){
+  this.sound.play('theme', {loop:true})
   bg = this.add.tileSprite(0, 0, 1600, 1200, 'background');
 
   // Player
