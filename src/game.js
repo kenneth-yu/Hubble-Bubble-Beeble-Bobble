@@ -23,6 +23,7 @@ var lastFired = 0;
 var arrayOfEnemies;
 var arrayOfBubbles = [];
 var bubble;
+var weapon;
 
 
 function preload ()
@@ -145,6 +146,9 @@ function create ()
   // this.physics.add.collider(enemy, player);
   // this.physics.add.collider(player, realEnemy);
 
+  this.physics.add.overlap(arrayOfBubbles, arrayOfEnemies, hitSprite, null, this);
+
+
     // this.physics.add.collider(bullet, realEnemy);
     // realEnemy.body.onCollide = new Phaser.Signal();
     // realEnemy.body.onCollide.add(hitSprite, this);
@@ -191,13 +195,18 @@ function create ()
 //
 // var bullet = bullets.get();
 // this.physics.add.collider(bullet, enemy);
+
+
+// Trying better bullets
+    weapon = game.add.weapon(1, 'bluebubbles');
+    //  The bullet will be automatically killed when it leaves the world bounds
+    weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
 }
 
 function hitSprite(bubble, enemy) {
-  // realEnemy.destroy();
-  enemy.destroy();
-  bubble.destroy();
+  enemy.setActive(false).setVisible(false);
   arrayOfEnemies.shift();
+  bubble.setActive(false).setVisible(false);
   arrayOfBubbles.shift();
 }
 
@@ -281,17 +290,18 @@ function update (time) {
     setTimeout(function() {enemy.setVelocityY(-260)}, 200);
   }
 
+
   // Real Enemy Chase
   if (arrayOfEnemies.length > 0) {
-    arrayOfEnemies.forEach(realEnemy => {
-      if (Math.round(realEnemy.x / 100)*100 > Math.round(player.x / 100)*100) {
-        realEnemy.setVelocityX(-200);
-        realEnemy.anims.play('enemyleft', true);
-      } else if (Math.round(realEnemy.x / 100)*100 < Math.round(player.x / 100)*100) {
-        realEnemy.setVelocityX(200);
-        realEnemy.anims.play('enemyright', true);
-      } else if (Math.floor(realEnemy.y / 100)*100 > Math.floor(player.y / 100)*100 && realEnemy.body.touching.down) {
-        setTimeout(function() {realEnemy.setVelocityY(-240)}, 300);
+    arrayOfEnemies.forEach(enemy => {
+      if (Math.round(enemy.x / 100)*100 > Math.round(player.x / 100)*100) {
+        enemy.setVelocityX(-200);
+        enemy.anims.play('enemyleft', true);
+      } else if (Math.round(enemy.x / 100)*100 < Math.round(player.x / 100)*100) {
+        enemy.setVelocityX(200);
+        enemy.anims.play('enemyright', true);
+      } else if (Math.floor(enemy.y / 100)*100 > Math.floor(player.y / 100)*100 && enemy.body.touching.down) {
+        setTimeout(function() {enemy.setVelocityY(-240)}, 300);
       }
       // if (!realEnemy.body.touching.up) {
       //   // realEnemy.destroy()
@@ -301,7 +311,6 @@ function update (time) {
   }
   // Real Enemy end
 
-    this.physics.add.overlap(arrayOfBubbles, arrayOfEnemies, hitSprite, null, this);
 
   // arrayOfBubbles.forEach(bubble => {
   //   this.physics.add.collider(bubble, arrayOfEnemies, hitSprite, null, this);
@@ -317,7 +326,7 @@ function update (time) {
     newEnemy.setCollideWorldBounds(true);
     //
     this.physics.add.collider(newEnemy, platforms);
-    this.physics.add.collider(newEnemy, player);
+    // this.physics.add.collider(newEnemy, player);
     arrayOfEnemies.push(newEnemy)
   }
 
