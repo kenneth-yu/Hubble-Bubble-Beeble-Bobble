@@ -167,15 +167,23 @@ function create ()
 }
 
 function hitSprite(bubble, enemy) {
-  let index = arrayOfEnemies.indexOf(enemy);
   let bubbleIndex = arrayOfBubbles.indexOf(bubble);
-  delete arrayOfEnemies[index];
-  enemy.destroy();
-  // enemy.setActive(false).setVisible(false);
+  let index = arrayOfEnemies.indexOf(enemy);
+  if (index > -1) {
+    arrayOfEnemies.splice(index, 1);
+  } else {
+    arrayOfEnemies.pop();
+  }
+  enemy.setActive(false).setVisible(false);
 
   bubble.setVelocity(0);
-  // bubble.setActive(false)
+  if (bubbleIndex > -1) {
+    arrayOfBubbles.splice(index, 1);
+  } else {
+    arrayOfBubbles.pop();
+  }
   bubble.destroy();
+  // bubble.setActive(false)
   // debugger
   // delete arrayOfBubbles[bubbleIndex];
   // arrayOfBubbles = arrayOfBubbles.filter((bubble) => bubble === undefined)
@@ -191,8 +199,17 @@ function playerWasHit(player, enemy) {
   console.log("Ouch!");
   hurt += 1;
   hurtText.setText(`I Am Hurt: ${hurt}`);
-  enemy.setActive(false).setVisible(false);
-  arrayOfEnemies.shift();
+  enemy.destroy();
+  let index = arrayOfEnemies.indexOf(enemy);
+  if (index > -1) {
+    arrayOfEnemies.splice(index, 1);
+  } else {
+    arrayOfEnemies.pop();
+  }
+  // delete arrayOfEnemies[index];
+  // arrayOfEnemies = arrayOfEnemies.filter((enemy) => enemy == false)
+
+  // enemy.destroy();
 
   // This causes new enemies to not hurt the player for some reason
   // let index = arrayOfEnemies.indexOf(enemy);
