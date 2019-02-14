@@ -7,7 +7,10 @@ var config = {
         arcade: {
             gravity: { y: 300 },
             debug: false
-        }
+        },
+        // audio: {
+        //   disableWebAudio: true
+        // }
     },
     scene: {
         preload: preload,
@@ -26,7 +29,8 @@ var bubble;
 var weapon;
 var hurt = 0;
 var killCount = 0;
-invincible = 'false'
+var invincible = 'false'
+var lives = 10
 
 
 function preload ()
@@ -36,7 +40,7 @@ function preload ()
   this.load.spritesheet('greendragon', '../images/greendragon.png',{ frameWidth: 64, frameHeight: 64});
   this.load.spritesheet('bluebubbles', '../images/bluebubbles.png',{ frameWidth: 64, frameHeight: 64});
   this.load.image('ground', '../images/platform.png');
-  this.load.image('background', '../images/background2.png');
+  this.load.image('background', '../images/forestbackground.png');
   // this.load.image('projectile', '../images/greenbubbles.png', {frameWidth: 64, frameHeight: 64});
 
 
@@ -140,12 +144,8 @@ function create ()
     key: 'bubbles',
     // frames: this.anims.generateFrameNumbers('bluedragon', {start: 8, end: 13}),
     frames: this.anims.generateFrameNumbers('bluebubbles', { start:0 , end:10}),
-    frameRate: 10,
+    frameRate: 15,
     // repeat:
-  })
-  this.anims.create({
-    key:'help',
-    frames: this.anims.generateFrameNumbers('bluedragon',{ frames: []})
   })
 
   platforms = this.physics.add.staticGroup();
@@ -158,17 +158,17 @@ function create ()
   // this.physics.add.collider(enemy, platforms);
   this.physics.add.collider(realEnemy, platforms);
   // this.physics.add.collider(enemy, player, playerWasHit, null, this);
-  this.physics.add.collider(player, arrayOfEnemies, playerWasHit, null, this);
+  this.physics.add.overlap(player, arrayOfEnemies, playerWasHit, null, this);
 
-  this.physics.add.collider(arrayOfBubbles, arrayOfEnemies, hitSprite, null, this);
+  this.physics.add.overlap(arrayOfBubbles, arrayOfEnemies, hitSprite, null, this);
 
     // this.physics.add.collider(bullet, realEnemy);
     // realEnemy.body.onCollide = new Phaser.Signal();
     // realEnemy.body.onCollide.add(hitSprite, this);
     // this.physics.add.overlap(player, stars, collectStar, null, this);
   //
-  scoreText = this.add.text(16, 16, `Le Pew Pews: ${killCount}`, { fontSize: '32px', fill: '#FFF' });
-  hurtText = this.add.text(16, 50, `I Am Hurt: ${hurt}`, { fontSize: '32px', fill: '#FFF' });
+  scoreText = this.add.text(16, 16, `Score: ${killCount}`, { fontSize: '32px', fill: '#000' });
+  hurtText = this.add.text(16, 550, `HP Left: ${lives}`, { fontSize: '32px', fill: '#fff' });
 }
 
 function hitSprite(bubble, enemy) {
@@ -204,32 +204,13 @@ function hitSprite(bubble, enemy) {
 }
 
 function playerWasHit(player, enemy) {
-  console.log("Ouch!");
-  if (invincible === 'false'){
-    hurt += 1
+  // console.log("Ouch!");
+  if (invincible === 'false' && lives > 0){
+    lives -= 1
     invincible = 'true'
     setTimeout(function () {invincible = 'false'}, 2000)
   }
-<<<<<<< HEAD
-  hurtText.setText(`I Am Hurt: ${hurt}`);
-  // enemy.destroy();
-  // let index = arrayOfEnemies.indexOf(enemy);
-  // if (index > -1) {
-  //   arrayOfEnemies.splice(index, 1);
-  // } else {
-  //   arrayOfEnemies.pop();
-  // }
-  // delete arrayOfEnemies[index];
-  // arrayOfEnemies = arrayOfEnemies.filter((enemy) => enemy == false)
-
-  // enemy.destroy();
-
-  // This causes new enemies to not hurt the player for some reason
-  // let index = arrayOfEnemies.indexOf(enemy);
-  // delete arrayOfEnemies[index];
-  // arrayOfEnemies = arrayOfEnemies.filter((enemy) => enemy === false)
-=======
->>>>>>> b5d77e4fb327ccfe990ed73515b5d311932f2f12
+  hurtText.setText(`HP Left: ${lives}`);
 }
 
 function update (time) {
@@ -239,13 +220,13 @@ function update (time) {
 
   //PLAYER MOVEMENTS --------------------------------------------------------------------
   if (cursors.left.isDown) {
-      player.setVelocityX(-250);
+      player.setVelocityX(-300);
       player.anims.play('left', true);
       direction = 'left'
   }
   else if (cursors.right.isDown) {
     // console.log("i tried to move right")
-      player.setVelocityX(250);
+      player.setVelocityX(300);
       player.anims.play('right', true);
       direction = 'right'
   }
@@ -257,24 +238,34 @@ function update (time) {
     newBubble.body.setAllowGravity(false);
     newBubble.body.onWorldBounds = true;
     arrayOfBubbles.push(newBubble)
+    setTimeout(function(){
+      let index = arrayOfBubbles.indexOf(newBubble);
+      if (index > -1) {
+        arrayOfBubbles.splice(index, 1);
+      } else {
+        arrayOfBubbles.pop();
+      }
+      newBubble.destroy();
+    }, 700)
+
     // debugger
 
     if (direction === 'left'){
       // console.log('i am facing left')
       player.anims.play('pewleft', true);
-      newBubble.setVelocityX(-400);
+      newBubble.setVelocityX(-300);
       newBubble.anims.play('bubbles', true)
     }
     else if (direction === 'right'){
       // console.log('i am facing right')
       player.anims.play('pewright', true);
-      newBubble.setVelocityX(400);
+      newBubble.setVelocityX(300);
       newBubble.anims.play('bubbles', true)
     }
     else{
       // console.log('i am facing left')
       player.anims.play('pewleft', true);
-      newBubble.setVelocityX(-400);
+      newBubble.setVelocityX(-300);
       newBubble.anims.play('bubbles', true)
     }
 
@@ -334,7 +325,7 @@ function update (time) {
   //ENEMY MOVEMENTS START ------------------------------------------------------
 
   // New Enemy Spawning
-  if (arrayOfEnemies.length < 1) {
+  if (arrayOfEnemies.length < 3) {
     let w = Math.random() * (800 - 100) + 100;
     let h = Math.random() * (500 - 100) + 100;
     const newEnemy = this.physics.add.sprite(w, h, 'enemy');
@@ -342,7 +333,7 @@ function update (time) {
     newEnemy.setCollideWorldBounds(true);
     //
     this.physics.add.collider(newEnemy, platforms);
-    this.physics.add.collider(newEnemy, player);
+    // this.physics.add.collider(newEnemy, player);
     arrayOfEnemies.push(newEnemy)
   }
 
@@ -371,5 +362,9 @@ if (arrayOfBubbles.length > 0) {
       bubble.destroy();
       }
     })
+  }
+
+  if (lives <= 0){
+
   }
 }
