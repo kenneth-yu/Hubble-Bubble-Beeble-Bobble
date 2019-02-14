@@ -23,6 +23,9 @@ var lastFired = 0;
 var arrayOfEnemies;
 var arrayOfBubbles = [];
 var bubble;
+var weapon;
+var hurt = 0;
+var killCount = 0;
 
 
 function preload ()
@@ -149,38 +152,84 @@ function create ()
   this.physics.add.collider(player, platforms);
   this.physics.add.collider(enemy, platforms);
   this.physics.add.collider(realEnemy, platforms);
-  // this.physics.add.collider(enemy, player);
-  // this.physics.add.collider(player, realEnemy);
+  // this.physics.add.collider(enemy, player, playerWasHit, null, this);
+  this.physics.add.collider(player, arrayOfEnemies, playerWasHit, null, this);
+
+  this.physics.add.collider(arrayOfBubbles, arrayOfEnemies, hitSprite, null, this);
 
     // this.physics.add.collider(bullet, realEnemy);
     // realEnemy.body.onCollide = new Phaser.Signal();
     // realEnemy.body.onCollide.add(hitSprite, this);
-
     // this.physics.add.overlap(player, stars, collectStar, null, this);
   //
+<<<<<<< HEAD
 
   scoreText = this.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#FFF' });
+=======
+  scoreText = this.add.text(16, 16, `Le Pew Pews: ${killCount}`, { fontSize: '32px', fill: '#FFF' });
+  hurtText = this.add.text(16, 50, `I Am Hurt: ${hurt}`, { fontSize: '32px', fill: '#FFF' });
+>>>>>>> da04c8fa7277c88b24ed29454a43d269db3ed48f
 }
 
 function hitSprite(bubble, enemy) {
-  // realEnemy.destroy();
-  enemy.destroy();
+  let bubbleIndex = arrayOfBubbles.indexOf(bubble);
+  let index = arrayOfEnemies.indexOf(enemy);
+  if (index > -1) {
+    arrayOfEnemies.splice(index, 1);
+  } else {
+    arrayOfEnemies.pop();
+  }
+  enemy.setActive(false).setVisible(false);
+
+  bubble.setVelocity(0);
+  if (bubbleIndex > -1) {
+    arrayOfBubbles.splice(index, 1);
+  } else {
+    arrayOfBubbles.pop();
+  }
   bubble.destroy();
-  arrayOfEnemies.shift();
-  arrayOfBubbles.shift();
+  // bubble.setActive(false)
+  // debugger
+  // delete arrayOfBubbles[bubbleIndex];
+  // arrayOfBubbles = arrayOfBubbles.filter((bubble) => bubble === undefined)
+  // setTimeout(() => {
+  //     bubble.anims.play('bubbles', true)
+  //     // bubble.setVisible(false);
+  //   }, 500)
+  killCount += 1;
+  scoreText.setText(`Le Pew Pews: ${killCount}`);
+}
+
+function playerWasHit(player, enemy) {
+  console.log("Ouch!");
+  hurt += 1;
+  hurtText.setText(`I Am Hurt: ${hurt}`);
+  enemy.destroy();
+  let index = arrayOfEnemies.indexOf(enemy);
+  if (index > -1) {
+    arrayOfEnemies.splice(index, 1);
+  } else {
+    arrayOfEnemies.pop();
+  }
+  // delete arrayOfEnemies[index];
+  // arrayOfEnemies = arrayOfEnemies.filter((enemy) => enemy == false)
+
+  // enemy.destroy();
+
+  // This causes new enemies to not hurt the player for some reason
+  // let index = arrayOfEnemies.indexOf(enemy);
+  // delete arrayOfEnemies[index];
+  // arrayOfEnemies = arrayOfEnemies.filter((enemy) => enemy === false)
 }
 
 
 function update (time) {
-
   var cursors = this.input.keyboard.createCursorKeys();
   var spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
   var zButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
 
   //PLAYER MOVEMENTS --------------------------------------------------------------------
   if (cursors.left.isDown) {
-    // console.log("i tried to move left")
-    // chase(enemy)
       player.setVelocityX(-250);
       player.anims.play('left', true);
       direction = 'left'
@@ -224,7 +273,6 @@ function update (time) {
   }
 
   if (cursors.up.isDown && player.body.touching.down) {
-     // console.log("i tried to jump")
       player.body.checkCollision.up = false
       player.setVelocityY(-320);
   }
@@ -255,28 +303,24 @@ function update (time) {
     setTimeout(function() {enemy.setVelocityY(-260)}, 200);
   }
 
+
   // Real Enemy Chase
   if (arrayOfEnemies.length > 0) {
-    arrayOfEnemies.forEach(realEnemy => {
-      if (Math.round(realEnemy.x / 100)*100 > Math.round(player.x / 100)*100) {
-        realEnemy.setVelocityX(-200);
-        realEnemy.anims.play('enemyleft', true);
-      } else if (Math.round(realEnemy.x / 100)*100 < Math.round(player.x / 100)*100) {
-        realEnemy.setVelocityX(200);
-        realEnemy.anims.play('enemyright', true);
-      } else if (Math.floor(realEnemy.y / 100)*100 > Math.floor(player.y / 100)*100 && realEnemy.body.touching.down) {
-        setTimeout(function() {realEnemy.setVelocityY(-240)}, 300);
+    arrayOfEnemies.forEach(enemy => {
+      if (Math.round(enemy.x / 100)*100 > Math.round(player.x / 100)*100) {
+        enemy.setVelocityX(-200);
+        enemy.anims.play('enemyleft', true);
+      } else if (Math.round(enemy.x / 100)*100 < Math.round(player.x / 100)*100) {
+        enemy.setVelocityX(200);
+        enemy.anims.play('enemyright', true);
+      } else if (Math.floor(enemy.y / 100)*100 > Math.floor(player.y / 100)*100 && enemy.body.touching.down) {
+        setTimeout(function() {enemy.setVelocityY(-240)}, 300);
       }
-      // if (!realEnemy.body.touching.up) {
-      //   // realEnemy.destroy()
-      //   console.log("touch");
-      // }
     })
   }
   // Real Enemy end
   //ENEMY MOVEMENTS START ------------------------------------------------------
 
-    this.physics.add.overlap(arrayOfBubbles, arrayOfEnemies, hitSprite, null, this);
 
   // arrayOfBubbles.forEach(bubble => {
   //   this.physics.add.collider(bubble, arrayOfEnemies, hitSprite, null, this);
@@ -294,7 +338,7 @@ function update (time) {
     newEnemy.setCollideWorldBounds(true);
     //
     this.physics.add.collider(newEnemy, platforms);
-    this.physics.add.collider(newEnemy, player);
+    // this.physics.add.collider(newEnemy, player);
     arrayOfEnemies.push(newEnemy)
   }
 
@@ -310,9 +354,3 @@ function update (time) {
   // }
 
 }
-
-// function chase(enemy){
-//   console.log()
-//   // this.physics.Arcade.moveToObject(enemy,player,60,10*1000);
-//     // Phaser.Physics.Arcade.moveToObject(enemy,player,60,1*1000);
-// }
