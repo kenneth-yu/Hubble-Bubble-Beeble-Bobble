@@ -168,14 +168,17 @@ function create ()
 
 function hitSprite(bubble, enemy) {
   let bubbleIndex = arrayOfBubbles.indexOf(bubble);
+
+  // Kill Enemy on Hit
   let index = arrayOfEnemies.indexOf(enemy);
   if (index > -1) {
     arrayOfEnemies.splice(index, 1);
   } else {
     arrayOfEnemies.pop();
   }
-  enemy.setActive(false).setVisible(false);
+  enemy.destroy();
 
+  // Kill Bubble on Hit
   bubble.setVelocity(0);
   if (bubbleIndex > -1) {
     arrayOfBubbles.splice(index, 1);
@@ -183,14 +186,15 @@ function hitSprite(bubble, enemy) {
     arrayOfBubbles.pop();
   }
   bubble.destroy();
-  // bubble.setActive(false)
-  // debugger
+
+
   // delete arrayOfBubbles[bubbleIndex];
   // arrayOfBubbles = arrayOfBubbles.filter((bubble) => bubble === undefined)
   // setTimeout(() => {
   //     bubble.anims.play('bubbles', true)
-  //     // bubble.setVisible(false);
   //   }, 500)
+
+  // Update Score
   killCount += 1;
   scoreText.setText(`Le Pew Pews: ${killCount}`);
 }
@@ -206,17 +210,7 @@ function playerWasHit(player, enemy) {
   } else {
     arrayOfEnemies.pop();
   }
-  // delete arrayOfEnemies[index];
-  // arrayOfEnemies = arrayOfEnemies.filter((enemy) => enemy == false)
-
-  // enemy.destroy();
-
-  // This causes new enemies to not hurt the player for some reason
-  // let index = arrayOfEnemies.indexOf(enemy);
-  // delete arrayOfEnemies[index];
-  // arrayOfEnemies = arrayOfEnemies.filter((enemy) => enemy === false)
 }
-
 
 function update (time) {
   var cursors = this.input.keyboard.createCursorKeys();
@@ -241,6 +235,7 @@ function update (time) {
     this.physics.add.collider(newBubble, realEnemy);
     newBubble.body.setAllowGravity(false)
     arrayOfBubbles.push(newBubble)
+    // debugger
 
     if (direction === 'left'){
       // console.log('i am facing left')
@@ -316,14 +311,6 @@ function update (time) {
   // Real Enemy end
   //ENEMY MOVEMENTS START ------------------------------------------------------
 
-
-  // arrayOfBubbles.forEach(bubble => {
-  //   this.physics.add.collider(bubble, arrayOfEnemies, hitSprite, null, this);
-  //   // if (!bubble.body.touching.none) {
-  //   //   console.log("Pop!");
-  //   // }
-  // })
-
   // New Enemy Spawning
   if (arrayOfEnemies.length < 2) {
     let w = Math.random() * (800 - 100) + 100;
@@ -348,4 +335,17 @@ function update (time) {
   //   arrayOfEnemies.push(newEnemy)
   // }
 
+// if (arrayOfBubbles.length > 0) {
+//   arrayOfBubbles.forEach(bubble => {
+//     if (bubble.body.velocity.x < 100) {
+//       let index = arrayOfEnemies.indexOf(enemy);
+//       if (index > -1) {
+//         arrayOfEnemies.splice(index, 1);
+//       } else {
+//         arrayOfEnemies.pop();
+//       }
+//     }
+//       bubble.destroy();
+//     })
+//   }
 }
