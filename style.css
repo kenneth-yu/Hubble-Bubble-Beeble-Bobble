@@ -2,8 +2,15 @@ table, th, td {
   border: 1px solid black;
   border-collapse: collapse;
   padding: 15px;
+  font-family: "Helvetica", Times, sans-serif;
+  font-size: 1.25em;
 }
 
 th {
   text-align: left;
+}
+
+table {
+  float: right;
+  width: 40%;
 }
