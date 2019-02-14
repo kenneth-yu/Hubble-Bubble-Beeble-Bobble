@@ -395,6 +395,6 @@ function update (time) {
   }
 
   if (lives <= 0){
-    this.sound.play('death')
+    // this.sound.play('death')
   }
 }
