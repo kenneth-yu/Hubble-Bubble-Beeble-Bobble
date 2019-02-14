@@ -24,6 +24,8 @@ var arrayOfEnemies;
 var arrayOfBubbles = [];
 var bubble;
 var weapon;
+var hurt = 0;
+var killCount = 0;
 
 
 function preload ()
@@ -143,64 +145,18 @@ function create ()
   this.physics.add.collider(player, platforms);
   this.physics.add.collider(enemy, platforms);
   this.physics.add.collider(realEnemy, platforms);
-  // this.physics.add.collider(enemy, player);
-  // this.physics.add.collider(player, realEnemy);
+  // this.physics.add.collider(enemy, player, playerWasHit, null, this);
+  this.physics.add.collider(player, arrayOfEnemies, playerWasHit, null, this);
 
   this.physics.add.overlap(arrayOfBubbles, arrayOfEnemies, hitSprite, null, this);
-
 
     // this.physics.add.collider(bullet, realEnemy);
     // realEnemy.body.onCollide = new Phaser.Signal();
     // realEnemy.body.onCollide.add(hitSprite, this);
-
     // this.physics.add.overlap(player, stars, collectStar, null, this);
   //
-
-
-
-  scoreText = this.add.text(16, 16, 'Le Pew Pews: 0', { fontSize: '32px', fill: '#FFF' });
-
-//   var Bullet = new Phaser.Class({
-//     Extends: Phaser.GameObjects.Image,
-//     initialize:
-//     function Bullet (scene)
-//     {
-//         Phaser.GameObjects.Image.call(this, scene, 10, 10, 'bluebubbles');
-//         this.speed = Phaser.Math.GetSpeed(400, 1);
-//     },
-//     fire: function (x, y)
-//     {
-//         this.setPosition(x - 50, y );
-//         this.setActive(true);
-//         this.setVisible(true);
-//     },
-//     update: function (time, delta)
-//     {
-//         this.x -= this.speed * delta;
-//         if (this.x < -50)
-//         {
-//             this.setActive(false);
-//             this.setVisible(false);
-//         }
-//     }
-//
-// });
-
-// bullets = this.add.group({
-//     classType: Bullet,
-//     maxSize: 10,
-//     runChildUpdate: true
-// });
-// speed = Phaser.Math.GetSpeed(300, 1);
-//
-// var bullet = bullets.get();
-// this.physics.add.collider(bullet, enemy);
-
-
-// Trying better bullets
-    weapon = game.add.weapon(1, 'bluebubbles');
-    //  The bullet will be automatically killed when it leaves the world bounds
-    weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
+  scoreText = this.add.text(16, 16, `Le Pew Pews: ${killCount}`, { fontSize: '32px', fill: '#FFF' });
+  hurtText = this.add.text(16, 50, `I Am Hurt: ${hurt}`, { fontSize: '32px', fill: '#FFF' });
 }
 
 function hitSprite(bubble, enemy) {
@@ -208,21 +164,24 @@ function hitSprite(bubble, enemy) {
   arrayOfEnemies.shift();
   bubble.setActive(false).setVisible(false);
   arrayOfBubbles.shift();
+  killCount += 1;
+  scoreText.setText(`Le Pew Pews: ${killCount}`);
+}
+
+function playerWasHit(player, enemy) {
+  console.log("Ouch!");
+  hurt += 1;
+  hurtText.setText(`I Am Hurt: ${hurt}`);
+  enemy.setActive(false).setVisible(false);
+  arrayOfEnemies.shift();
 }
 
 
 function update (time) {
-  // console.log(this.scene)
-  // debugger
-  // this.physics.moveToObject(enemy,player,60,3*1000);
-  // var bullet;
-
   var cursors = this.input.keyboard.createCursorKeys();
   var spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
   var zButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
   if (cursors.left.isDown) {
-    // console.log("i tried to move left")
-    // chase(enemy)
       player.setVelocityX(-250);
       player.anims.play('left', true);
   }
@@ -231,7 +190,7 @@ function update (time) {
       player.setVelocityX(250);
       player.anims.play('right', true);
   }
-  else if (Phaser.Input.Keyboard.JustDown(spaceBar)){
+  else if (Phaser.Input.Keyboard.JustDown(spaceBar) && (time - lastFired) > 300){
     player.anims.play('pew', true);
       const newBubble = this.physics.add.sprite(player.x, player.y, 'bluebubbles');
         this.physics.add.collider(newBubble, enemy);
@@ -240,34 +199,19 @@ function update (time) {
         newBubble.setVelocityX(-400);
         newBubble.anims.play('bubbles', true)
         arrayOfBubbles.push(newBubble)
-
-    // bullet = bullets.get();
-    // if (bullet){
-    //     bullet.fire(player.x, player.y);
-    //     lastFired = time + 1000;
-    // }
+        lastFired = time + 1000;
   }
   else {
       player.setVelocityX(0);
       // player.anims.play('turnRight');
   }
 
-  // if (Phaser.Input.Keyboard.JustDown(zButton)) {
-  //   // newEnemy.setBounce(0);
-  //   newEnemy.setCollideWorldBounds(true);
-  //   //
-  // }
-
-
   if (cursors.up.isDown && player.body.touching.down) {
-     // console.log("i tried to jump")
       player.body.checkCollision.up = false
       player.setVelocityY(-320);
   }
 
-  // else if (cursors.right.isDown) {
-  // }
-
+  // A bunch of console.log();
   else if (player.y < 360 && enemy.y > 500){
     console.log("Blue is on Platform 1 and Green is on the Ground")
   }
@@ -303,10 +247,6 @@ function update (time) {
       } else if (Math.floor(enemy.y / 100)*100 > Math.floor(player.y / 100)*100 && enemy.body.touching.down) {
         setTimeout(function() {enemy.setVelocityY(-240)}, 300);
       }
-      // if (!realEnemy.body.touching.up) {
-      //   // realEnemy.destroy()
-      //   console.log("touch");
-      // }
     })
   }
   // Real Enemy end
@@ -329,11 +269,4 @@ function update (time) {
     // this.physics.add.collider(newEnemy, player);
     arrayOfEnemies.push(newEnemy)
   }
-
 }
-
-// function chase(enemy){
-//   console.log()
-//   // this.physics.Arcade.moveToObject(enemy,player,60,10*1000);
-//     // Phaser.Physics.Arcade.moveToObject(enemy,player,60,1*1000);
-// }
