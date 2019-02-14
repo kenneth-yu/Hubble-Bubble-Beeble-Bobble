@@ -196,7 +196,9 @@ function create ()
 function hitSprite(bubble, enemy) {
   // realEnemy.destroy();
   enemy.destroy();
+  bubble.destroy();
   arrayOfEnemies.shift();
+  arrayOfBubbles.shift();
 }
 
 
