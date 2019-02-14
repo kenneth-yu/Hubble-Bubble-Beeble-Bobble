@@ -31,6 +31,7 @@ var hurt = 0;
 var killCount = 0;
 var invincible = 'false'
 var lives = 10
+var direction = 'left'
 
 
 function preload ()
@@ -85,8 +86,14 @@ function create ()
       // repeat: -1
   });
   this.anims.create({
-      key: 'roboDeath',
+      key: 'roboDeathLeft',
       frames: this.anims.generateFrameNumbers('roboDeath', { start: 0, end: 3 }),
+      frameRate: 10,
+      // repeat: -1
+  });
+  this.anims.create({
+      key: 'roboDeathRight',
+      frames: this.anims.generateFrameNumbers('roboDeath', { start: 4, end: 8 }),
       frameRate: 10,
       // repeat: -1
   });
@@ -167,18 +174,18 @@ function create ()
   // this.physics.add.collider(enemy, player, playerWasHit, null, this);
   this.physics.add.overlap(player, arrayOfEnemies, playerWasHit, null, this);
 
-  this.physics.add.overlap(arrayOfBubbles, arrayOfEnemies, hitSprite, null, this);
+  this.physics.add.overlap(arrayOfBubbles, arrayOfEnemies, bubbleHitEnemy, null, this);
 
     // this.physics.add.collider(bullet, realEnemy);
     // realEnemy.body.onCollide = new Phaser.Signal();
-    // realEnemy.body.onCollide.add(hitSprite, this);
+    // realEnemy.body.onCollide.add(bubbleHitEnemy, this);
     // this.physics.add.overlap(player, stars, collectStar, null, this);
   //
   scoreText = this.add.text(16, 16, `Score: ${killCount}`, { fontSize: '32px', fill: '#000' });
   hurtText = this.add.text(16, 550, `HP Left: ${lives}`, { fontSize: '32px', fill: '#fff' });
 }
 
-function hitSprite(bubble, enemy) {
+function bubbleHitEnemy(bubble, enemy) {
   // Kill Enemy on Hit
   let index = arrayOfEnemies.indexOf(enemy);
   if (index > -1) {
@@ -186,12 +193,18 @@ function hitSprite(bubble, enemy) {
   } else {
     arrayOfEnemies.pop();
   }
-  enemy.anims.play('roboDeath', true)
+  if (enemy.body.velocity.x >= 0) {
+    enemy.body.velocity.x = -200
+    enemy.anims.play('roboDeathRight', true)
+  } else {
+    enemy.body.velocity.x = 200
+    enemy.anims.play('roboDeathLeft', true)
+  }
   setTimeout(function(){
     // setTimeout(function(){
       enemy.destroy();
     // }, 1000)
-  }, 800)
+  }, 700)
 
   // Kill Bubble on Hit
   let bubbleIndex = arrayOfBubbles.indexOf(bubble);
@@ -250,20 +263,6 @@ function update (time) {
     newBubble.body.setAllowGravity(false);
     newBubble.body.onWorldBounds = true;
     arrayOfBubbles.push(newBubble)
-<<<<<<< HEAD
-    setTimeout(()=> {
-      if (!!newBubble) {
-        let bubbleIndex = arrayOfBubbles.indexOf(newBubble);
-        newBubble.setVelocity(0);
-        if (bubbleIndex > -1) {
-          arrayOfBubbles.splice(bubbleIndex, 1);
-        } else {
-          arrayOfBubbles.pop();
-        }
-        newBubble.destroy();
-      }
-    }, 900)
-=======
     setTimeout(function(){
       let index = arrayOfBubbles.indexOf(newBubble);
       if (index > -1) {
@@ -275,7 +274,6 @@ function update (time) {
     }, 700)
 
     // debugger
->>>>>>> 13710b5224e710d3bbd9d28f73d686ef20681c69
 
     if (direction === 'left'){
       // console.log('i am facing left')
