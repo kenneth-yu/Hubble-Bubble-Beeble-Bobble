@@ -172,16 +172,12 @@ function hitSprite(bubble, enemy) {
 
 
 function update (time) {
-  // console.log(this.scene)
-  // debugger
-  // this.physics.moveToObject(enemy,player,60,3*1000);
-  // var bullet;
 
   var cursors = this.input.keyboard.createCursorKeys();
   var spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
   var zButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
 
-
+  //PLAYER MOVEMENTS --------------------------------------------------------------------
   if (cursors.left.isDown) {
     // console.log("i tried to move left")
     // chase(enemy)
@@ -227,12 +223,15 @@ function update (time) {
       // player.anims.play('turnRight');
   }
 
-
   if (cursors.up.isDown && player.body.touching.down) {
      // console.log("i tried to jump")
       player.body.checkCollision.up = false
       player.setVelocityY(-320);
   }
+  //PLAYER MOVEMENTS END -------------------------------------------------------
+
+
+  //ENEMY MOVEMENTS START ------------------------------------------------------
 
   // else if (player.y < 360 && enemy.y > 500){
   //   console.log("Blue is on Platform 1 and Green is on the Ground")
@@ -275,6 +274,7 @@ function update (time) {
     })
   }
   // Real Enemy end
+  //ENEMY MOVEMENTS START ------------------------------------------------------
 
     this.physics.add.overlap(arrayOfBubbles, arrayOfEnemies, hitSprite, null, this);
 
@@ -286,8 +286,10 @@ function update (time) {
   // })
 
   // New Enemy Spawning
-  if (Phaser.Input.Keyboard.JustDown(zButton)) {
-    const newEnemy = this.physics.add.sprite(200, 300, 'enemy');
+  if (arrayOfEnemies.length < 2) {
+    let w = Math.random() * (800 - 100) + 100;
+    let h = Math.random() * (500 - 100) + 100;
+    const newEnemy = this.physics.add.sprite(w, h, 'enemy');
     // newEnemy.setBounce(0);
     newEnemy.setCollideWorldBounds(true);
     //
@@ -295,6 +297,17 @@ function update (time) {
     this.physics.add.collider(newEnemy, player);
     arrayOfEnemies.push(newEnemy)
   }
+
+  //  Manual New Enemy Spawning
+  // if (Phaser.Input.Keyboard.JustDown(zButton)) {
+  //   const newEnemy = this.physics.add.sprite(200, 300, 'enemy');
+  //   // newEnemy.setBounce(0);
+  //   newEnemy.setCollideWorldBounds(true);
+  //   //
+  //   this.physics.add.collider(newEnemy, platforms);
+  //   this.physics.add.collider(newEnemy, player);
+  //   arrayOfEnemies.push(newEnemy)
+  // }
 
 }
 
