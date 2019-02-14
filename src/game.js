@@ -172,30 +172,33 @@ function create ()
 }
 
 function hitSprite(bubble, enemy) {
-  let bubbleIndex = arrayOfBubbles.indexOf(bubble);
+  // Kill Enemy on Hit
   let index = arrayOfEnemies.indexOf(enemy);
   if (index > -1) {
     arrayOfEnemies.splice(index, 1);
   } else {
     arrayOfEnemies.pop();
   }
-  enemy.setActive(false).setVisible(false);
+  enemy.destroy();
 
+  // Kill Bubble on Hit
+  let bubbleIndex = arrayOfBubbles.indexOf(bubble);
   bubble.setVelocity(0);
   if (bubbleIndex > -1) {
-    arrayOfBubbles.splice(index, 1);
+    arrayOfBubbles.splice(bubbleIndex, 1);
   } else {
     arrayOfBubbles.pop();
   }
   bubble.destroy();
-  // bubble.setActive(false)
-  // debugger
+
+
   // delete arrayOfBubbles[bubbleIndex];
   // arrayOfBubbles = arrayOfBubbles.filter((bubble) => bubble === undefined)
   // setTimeout(() => {
   //     bubble.anims.play('bubbles', true)
-  //     // bubble.setVisible(false);
   //   }, 500)
+
+  // Update Score
   killCount += 1;
   scoreText.setText(`Score: ${killCount}`);
 }
@@ -207,6 +210,7 @@ function playerWasHit(player, enemy) {
     invincible = 'true'
     setTimeout(function () {invincible = 'false'}, 2000)
   }
+<<<<<<< HEAD
   hurtText.setText(`I Am Hurt: ${hurt}`);
   // enemy.destroy();
   // let index = arrayOfEnemies.indexOf(enemy);
@@ -224,8 +228,9 @@ function playerWasHit(player, enemy) {
   // let index = arrayOfEnemies.indexOf(enemy);
   // delete arrayOfEnemies[index];
   // arrayOfEnemies = arrayOfEnemies.filter((enemy) => enemy === false)
+=======
+>>>>>>> b5d77e4fb327ccfe990ed73515b5d311932f2f12
 }
-
 
 function update (time) {
   var cursors = this.input.keyboard.createCursorKeys();
@@ -248,8 +253,11 @@ function update (time) {
     const newBubble = this.physics.add.sprite(player.x, player.y, 'bluebubbles');
     this.physics.add.collider(newBubble, enemy);
     this.physics.add.collider(newBubble, realEnemy);
-    newBubble.body.setAllowGravity(false)
+    newBubble.setCollideWorldBounds(true);
+    newBubble.body.setAllowGravity(false);
+    newBubble.body.onWorldBounds = true;
     arrayOfBubbles.push(newBubble)
+    // debugger
 
     if (direction === 'left'){
       // console.log('i am facing left')
@@ -325,14 +333,6 @@ function update (time) {
   // Real Enemy end
   //ENEMY MOVEMENTS START ------------------------------------------------------
 
-
-  // arrayOfBubbles.forEach(bubble => {
-  //   this.physics.add.collider(bubble, arrayOfEnemies, hitSprite, null, this);
-  //   // if (!bubble.body.touching.none) {
-  //   //   console.log("Pop!");
-  //   // }
-  // })
-
   // New Enemy Spawning
   if (arrayOfEnemies.length < 1) {
     let w = Math.random() * (800 - 100) + 100;
@@ -357,4 +357,19 @@ function update (time) {
   //   arrayOfEnemies.push(newEnemy)
   // }
 
+if (arrayOfBubbles.length > 0) {
+  arrayOfBubbles.forEach(bubble => {
+    // debugger
+    if (bubble.body.checkWorldBounds()) {
+      let index = arrayOfBubbles.indexOf(bubble);
+      if (index > -1) {
+        arrayOfBubbles.splice(index, 1);
+      } else {
+        arrayOfBubbles.pop();
+      }
+      // debugger
+      bubble.destroy();
+      }
+    })
+  }
 }
