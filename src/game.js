@@ -8,9 +8,9 @@ var config = {
             gravity: { y: 300 },
             debug: false
         },
-        // audio: {
-        //   disableWebAudio: true
-        // }
+        audio: {
+          disableWebAudio: true
+        }
     },
     scene: {
         preload: preload,
@@ -41,6 +41,9 @@ function preload ()
   this.load.spritesheet('bluebubbles', '../images/bluebubbles.png',{ frameWidth: 64, frameHeight: 64});
   this.load.image('ground', '../images/platform.png');
   this.load.image('background', '../images/forestbackground.png');
+  this.load.audio('death', '../audio/death.mp3');
+  this.load.audio('jump', '../audio/jump.mp3');
+  this.load.audio('shootbubble', '../audio/shootbubble.mp3');
   // this.load.image('projectile', '../images/greenbubbles.png', {frameWidth: 64, frameHeight: 64});
 
 
@@ -200,7 +203,7 @@ function hitSprite(bubble, enemy) {
 
   // Update Score
   killCount += 1;
-  scoreText.setText(`Score: ${killCount}`);
+  scoreText.setText(`Score: ${killCount*100}`);
 }
 
 function playerWasHit(player, enemy) {
@@ -238,6 +241,7 @@ function update (time) {
     newBubble.body.setAllowGravity(false);
     newBubble.body.onWorldBounds = true;
     arrayOfBubbles.push(newBubble)
+    this.sound.play('shootbubble');
     setTimeout(function(){
       let index = arrayOfBubbles.indexOf(newBubble);
       if (index > -1) {
@@ -278,6 +282,7 @@ function update (time) {
   if (cursors.up.isDown && player.body.touching.down) {
       player.body.checkCollision.up = false
       player.setVelocityY(-320);
+      this.sound.play('jump');
   }
   //PLAYER MOVEMENTS END -------------------------------------------------------
 
@@ -365,6 +370,6 @@ if (arrayOfBubbles.length > 0) {
   }
 
   if (lives <= 0){
-
+    this.sound.play('death')
   }
 }
