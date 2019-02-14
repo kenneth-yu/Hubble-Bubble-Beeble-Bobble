@@ -167,8 +167,6 @@ function create ()
 }
 
 function hitSprite(bubble, enemy) {
-  let bubbleIndex = arrayOfBubbles.indexOf(bubble);
-
   // Kill Enemy on Hit
   let index = arrayOfEnemies.indexOf(enemy);
   if (index > -1) {
@@ -179,9 +177,10 @@ function hitSprite(bubble, enemy) {
   enemy.destroy();
 
   // Kill Bubble on Hit
+  let bubbleIndex = arrayOfBubbles.indexOf(bubble);
   bubble.setVelocity(0);
   if (bubbleIndex > -1) {
-    arrayOfBubbles.splice(index, 1);
+    arrayOfBubbles.splice(bubbleIndex, 1);
   } else {
     arrayOfBubbles.pop();
   }
@@ -233,7 +232,9 @@ function update (time) {
     const newBubble = this.physics.add.sprite(player.x, player.y, 'bluebubbles');
     this.physics.add.collider(newBubble, enemy);
     this.physics.add.collider(newBubble, realEnemy);
-    newBubble.body.setAllowGravity(false)
+    newBubble.setCollideWorldBounds(true);
+    newBubble.body.setAllowGravity(false);
+    newBubble.body.onWorldBounds = true;
     arrayOfBubbles.push(newBubble)
     // debugger
 
@@ -335,17 +336,19 @@ function update (time) {
   //   arrayOfEnemies.push(newEnemy)
   // }
 
-// if (arrayOfBubbles.length > 0) {
-//   arrayOfBubbles.forEach(bubble => {
-//     if (bubble.body.velocity.x < 100) {
-//       let index = arrayOfEnemies.indexOf(enemy);
-//       if (index > -1) {
-//         arrayOfEnemies.splice(index, 1);
-//       } else {
-//         arrayOfEnemies.pop();
-//       }
-//     }
-//       bubble.destroy();
-//     })
-//   }
+if (arrayOfBubbles.length > 0) {
+  arrayOfBubbles.forEach(bubble => {
+    // debugger
+    if (bubble.body.checkWorldBounds()) {
+      let index = arrayOfBubbles.indexOf(bubble);
+      if (index > -1) {
+        arrayOfBubbles.splice(index, 1);
+      } else {
+        arrayOfBubbles.pop();
+      }
+      // debugger
+      bubble.destroy();
+      }
+    })
+  }
 }
