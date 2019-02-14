@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  start: 1
+  end: 1
+  playable_sprite_id: 1
+  ai_sprite_id: 1
+
+two:
+  name: MyString
+  start: 1
+  end: 1
+  playable_sprite_id: 1
+  ai_sprite_id: 1
