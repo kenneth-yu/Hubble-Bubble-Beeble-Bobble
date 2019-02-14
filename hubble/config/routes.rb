@@ -5,7 +5,11 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :playable_sprites, only: [:index, :create, :update]
       resources :highscores, only: [:index, :create, :update]
+<<<<<<< HEAD
+      resources :animations, only: [:index, :show, :create, :update]
+=======
       resources :animations, only: [:index, :create, :update]
+>>>>>>> master
       resources :ai_sprites, only: [:index, :create, :update]
     end
   end

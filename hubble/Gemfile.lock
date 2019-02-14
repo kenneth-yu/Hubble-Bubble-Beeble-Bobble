@@ -117,6 +117,10 @@ GEM
     rb-fsevent (0.10.3)
     rb-inotify (0.10.0)
       ffi (~> 1.0)
+<<<<<<< HEAD
+    rb-readline (0.5.5)
+=======
+>>>>>>> master
     ruby_dep (1.5.0)
     spring (2.0.2)
       activesupport (>= 4.2)
@@ -150,6 +154,10 @@ DEPENDENCIES
   puma (~> 3.11)
   rack-cors
   rails (~> 5.2.2)
+<<<<<<< HEAD
+  rb-readline
+=======
+>>>>>>> master
   spring
   spring-watcher-listen (~> 2.0.0)
   tzinfo-data

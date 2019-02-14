@@ -1,5 +1,9 @@
 class Api::V1::AnimationsController < ApplicationController
+<<<<<<< HEAD
+  before_action :find_animation, only: [:show, :update]
+=======
   before_action :find_animation, only: [:update]
+>>>>>>> master
   def index
     @animations = Animation.all
     render json: @animations
