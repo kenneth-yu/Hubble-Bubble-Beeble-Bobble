@@ -26,6 +26,7 @@ var bubble;
 var weapon;
 var hurt = 0;
 var killCount = 0;
+invincible = 'false'
 
 
 function preload ()
@@ -142,6 +143,10 @@ function create ()
     frameRate: 10,
     // repeat:
   })
+  this.anims.create({
+    key:'help',
+    frames: this.anims.generateFrameNumbers('bluedragon',{ frames: []})
+  })
 
   platforms = this.physics.add.staticGroup();
   platforms.create(400, 568, 'ground').setScale(2).refreshBody();
@@ -150,7 +155,7 @@ function create ()
   platforms.create(750, 220, 'ground');
 
   this.physics.add.collider(player, platforms);
-  this.physics.add.collider(enemy, platforms);
+  // this.physics.add.collider(enemy, platforms);
   this.physics.add.collider(realEnemy, platforms);
   // this.physics.add.collider(enemy, player, playerWasHit, null, this);
   this.physics.add.collider(player, arrayOfEnemies, playerWasHit, null, this);
@@ -162,13 +167,8 @@ function create ()
     // realEnemy.body.onCollide.add(hitSprite, this);
     // this.physics.add.overlap(player, stars, collectStar, null, this);
   //
-<<<<<<< HEAD
-
-  scoreText = this.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#FFF' });
-=======
   scoreText = this.add.text(16, 16, `Le Pew Pews: ${killCount}`, { fontSize: '32px', fill: '#FFF' });
   hurtText = this.add.text(16, 50, `I Am Hurt: ${hurt}`, { fontSize: '32px', fill: '#FFF' });
->>>>>>> da04c8fa7277c88b24ed29454a43d269db3ed48f
 }
 
 function hitSprite(bubble, enemy) {
@@ -197,20 +197,24 @@ function hitSprite(bubble, enemy) {
   //     // bubble.setVisible(false);
   //   }, 500)
   killCount += 1;
-  scoreText.setText(`Le Pew Pews: ${killCount}`);
+  scoreText.setText(`Score: ${killCount}`);
 }
 
 function playerWasHit(player, enemy) {
   console.log("Ouch!");
-  hurt += 1;
-  hurtText.setText(`I Am Hurt: ${hurt}`);
-  enemy.destroy();
-  let index = arrayOfEnemies.indexOf(enemy);
-  if (index > -1) {
-    arrayOfEnemies.splice(index, 1);
-  } else {
-    arrayOfEnemies.pop();
+  if (invincible === 'false'){
+    hurt += 1
+    invincible = 'true'
+    setTimeout(function () {invincible = 'false'}, 2000)
   }
+  hurtText.setText(`I Am Hurt: ${hurt}`);
+  // enemy.destroy();
+  // let index = arrayOfEnemies.indexOf(enemy);
+  // if (index > -1) {
+  //   arrayOfEnemies.splice(index, 1);
+  // } else {
+  //   arrayOfEnemies.pop();
+  // }
   // delete arrayOfEnemies[index];
   // arrayOfEnemies = arrayOfEnemies.filter((enemy) => enemy == false)
 
@@ -338,7 +342,7 @@ function update (time) {
     newEnemy.setCollideWorldBounds(true);
     //
     this.physics.add.collider(newEnemy, platforms);
-    // this.physics.add.collider(newEnemy, player);
+    this.physics.add.collider(newEnemy, player);
     arrayOfEnemies.push(newEnemy)
   }
 
