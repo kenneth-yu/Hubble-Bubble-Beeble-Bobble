@@ -119,17 +119,24 @@ function create ()
       // repeat: -1
   });
   this.anims.create({
-    key: 'pew',
+    key: 'pewleft',
     // frames: this.anims.generateFrameNumbers('bluedragon', {start: 8, end: 13}),
     frames: this.anims.generateFrameNumbers('bluedragon', { frames: [ 8, 9, 10, 11, 10, 9, 8, 0]}),
-    frameRate: 20,
+    frameRate: 30,
+    // repeat:
+  })
+  this.anims.create({
+    key: 'pewright',
+    // frames: this.anims.generateFrameNumbers('bluedragon', {start: 8, end: 13}),
+    frames: this.anims.generateFrameNumbers('bluedragon', { frames: [ 28, 29, 30, 31, 30, 29, 28, 20]}),
+    frameRate: 30,
     // repeat:
   })
   this.anims.create({
     key: 'bubbles',
     // frames: this.anims.generateFrameNumbers('bluedragon', {start: 8, end: 13}),
     frames: this.anims.generateFrameNumbers('bluebubbles', { start:0 , end:10}),
-    frameRate: 20,
+    frameRate: 10,
     // repeat:
   })
 
@@ -152,45 +159,7 @@ function create ()
     // this.physics.add.overlap(player, stars, collectStar, null, this);
   //
 
-
-
   scoreText = this.add.text(16, 16, 'Le Pew Pews: 0', { fontSize: '32px', fill: '#FFF' });
-
-//   var Bullet = new Phaser.Class({
-//     Extends: Phaser.GameObjects.Image,
-//     initialize:
-//     function Bullet (scene)
-//     {
-//         Phaser.GameObjects.Image.call(this, scene, 10, 10, 'bluebubbles');
-//         this.speed = Phaser.Math.GetSpeed(400, 1);
-//     },
-//     fire: function (x, y)
-//     {
-//         this.setPosition(x - 50, y );
-//         this.setActive(true);
-//         this.setVisible(true);
-//     },
-//     update: function (time, delta)
-//     {
-//         this.x -= this.speed * delta;
-//         if (this.x < -50)
-//         {
-//             this.setActive(false);
-//             this.setVisible(false);
-//         }
-//     }
-//
-// });
-
-// bullets = this.add.group({
-//     classType: Bullet,
-//     maxSize: 10,
-//     runChildUpdate: true
-// });
-// speed = Phaser.Math.GetSpeed(300, 1);
-//
-// var bullet = bullets.get();
-// this.physics.add.collider(bullet, enemy);
 }
 
 function hitSprite(bubble, enemy) {
@@ -211,43 +180,52 @@ function update (time) {
   var cursors = this.input.keyboard.createCursorKeys();
   var spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
   var zButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
+
+
   if (cursors.left.isDown) {
     // console.log("i tried to move left")
     // chase(enemy)
       player.setVelocityX(-250);
       player.anims.play('left', true);
+      direction = 'left'
   }
   else if (cursors.right.isDown) {
     // console.log("i tried to move right")
       player.setVelocityX(250);
       player.anims.play('right', true);
+      direction = 'right'
   }
   else if (Phaser.Input.Keyboard.JustDown(spaceBar)){
-    player.anims.play('pew', true);
-      const newBubble = this.physics.add.sprite(player.x, player.y, 'bluebubbles');
-        this.physics.add.collider(newBubble, enemy);
-        this.physics.add.collider(newBubble, realEnemy);
-        newBubble.body.setAllowGravity(false)
-        newBubble.setVelocityX(-400);
-        newBubble.anims.play('bubbles', true)
-        arrayOfBubbles.push(newBubble)
+    const newBubble = this.physics.add.sprite(player.x, player.y, 'bluebubbles');
+    this.physics.add.collider(newBubble, enemy);
+    this.physics.add.collider(newBubble, realEnemy);
+    newBubble.body.setAllowGravity(false)
+    arrayOfBubbles.push(newBubble)
 
-    // bullet = bullets.get();
-    // if (bullet){
-    //     bullet.fire(player.x, player.y);
-    //     lastFired = time + 1000;
-    // }
+    if (direction === 'left'){
+      // console.log('i am facing left')
+      player.anims.play('pewleft', true);
+      newBubble.setVelocityX(-400);
+      newBubble.anims.play('bubbles', true)
+    }
+    else if (direction === 'right'){
+      // console.log('i am facing right')
+      player.anims.play('pewright', true);
+      newBubble.setVelocityX(400);
+      newBubble.anims.play('bubbles', true)
+    }
+    else{
+      // console.log('i am facing left')
+      player.anims.play('pewleft', true);
+      newBubble.setVelocityX(-400);
+      newBubble.anims.play('bubbles', true)
+    }
+
   }
   else {
       player.setVelocityX(0);
       // player.anims.play('turnRight');
   }
-
-  // if (Phaser.Input.Keyboard.JustDown(zButton)) {
-  //   // newEnemy.setBounce(0);
-  //   newEnemy.setCollideWorldBounds(true);
-  //   //
-  // }
 
 
   if (cursors.up.isDown && player.body.touching.down) {
@@ -256,18 +234,15 @@ function update (time) {
       player.setVelocityY(-320);
   }
 
-  // else if (cursors.right.isDown) {
+  // else if (player.y < 360 && enemy.y > 500){
+  //   console.log("Blue is on Platform 1 and Green is on the Ground")
   // }
-
-  else if (player.y < 360 && enemy.y > 500){
-    console.log("Blue is on Platform 1 and Green is on the Ground")
-  }
-  if (player.y < 220 && enemy.y > 500){
-    console.log("Blue is on Platform 2 and Green is on the Ground")
-  }
-  else if (player.y < 180 &&  enemy.y > 500 ){
-    console.log("Blue is on Platform 3 and Green is on the Ground")
-  }
+  // if (player.y < 220 && enemy.y > 500){
+  //   console.log("Blue is on Platform 2 and Green is on the Ground")
+  // }
+  // else if (player.y < 180 &&  enemy.y > 500 ){
+  //   console.log("Blue is on Platform 3 and Green is on the Ground")
+  // }
   if (Math.round(enemy.x / 100)*100 > Math.round(player.x / 100)*100) {
     enemy.setVelocityX(-150);
     enemy.anims.play('greenleft', true);
