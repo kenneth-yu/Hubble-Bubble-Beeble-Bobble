@@ -148,7 +148,7 @@ function create ()
   // this.physics.add.collider(enemy, player, playerWasHit, null, this);
   this.physics.add.collider(player, arrayOfEnemies, playerWasHit, null, this);
 
-  this.physics.add.overlap(arrayOfBubbles, arrayOfEnemies, hitSprite, null, this);
+  this.physics.add.collider(arrayOfBubbles, arrayOfEnemies, hitSprite, null, this);
 
     // this.physics.add.collider(bullet, realEnemy);
     // realEnemy.body.onCollide = new Phaser.Signal();
@@ -160,10 +160,22 @@ function create ()
 }
 
 function hitSprite(bubble, enemy) {
-  enemy.setActive(false).setVisible(false);
-  arrayOfEnemies.shift();
-  bubble.setActive(false).setVisible(false);
-  arrayOfBubbles.shift();
+  let index = arrayOfEnemies.indexOf(enemy);
+  let bubbleIndex = arrayOfBubbles.indexOf(bubble);
+  delete arrayOfEnemies[index];
+  enemy.destroy();
+  // enemy.setActive(false).setVisible(false);
+
+  bubble.setVelocity(0);
+  // bubble.setActive(false)
+  bubble.destroy();
+  // debugger
+  // delete arrayOfBubbles[bubbleIndex];
+  // arrayOfBubbles = arrayOfBubbles.filter((bubble) => bubble === undefined)
+  // setTimeout(() => {
+  //     bubble.anims.play('bubbles', true)
+  //     // bubble.setVisible(false);
+  //   }, 500)
   killCount += 1;
   scoreText.setText(`Le Pew Pews: ${killCount}`);
 }
@@ -174,6 +186,11 @@ function playerWasHit(player, enemy) {
   hurtText.setText(`I Am Hurt: ${hurt}`);
   enemy.setActive(false).setVisible(false);
   arrayOfEnemies.shift();
+
+  // This causes new enemies to not hurt the player for some reason
+  // let index = arrayOfEnemies.indexOf(enemy);
+  // delete arrayOfEnemies[index];
+  // arrayOfEnemies = arrayOfEnemies.filter((enemy) => enemy === false)
 }
 
 
@@ -200,6 +217,12 @@ function update (time) {
         newBubble.anims.play('bubbles', true)
         arrayOfBubbles.push(newBubble)
         lastFired = time + 1000;
+
+        // setTimeout(() => {
+        //   newBubble.destroy();
+        //   let index = arrayOfBubbles.indexOf(newBubble);
+        //   delete arrayOfBubbles[index];
+        // }, 1000)
   }
   else {
       player.setVelocityX(0);
