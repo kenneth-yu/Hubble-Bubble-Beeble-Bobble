@@ -9,7 +9,7 @@ function getHighScores(){
 }
 
 function iterateHighScores(highScores, scoresLocation){
-  scoresLocation.innerHTML = highScores.map(highScoreHTML).join('')
+  scoresLocation.innerHTML += highScores.map(highScoreHTML).join('')
 }
 
 function highScoreHTML(highScore){
@@ -23,7 +23,8 @@ function highScoreHTML(highScore){
 }
 
 document.addEventListener('DOMContentLoaded', async() =>{
-  scoresLocation = document.getElementById('scores')
+  scoresLocation = document.getElementById('highscores')
+  console.log(scoresLocation.innerHTML)
   allSprites = await getAllSprites()
   highScores = await getHighScores()
   console.log(highScores)
