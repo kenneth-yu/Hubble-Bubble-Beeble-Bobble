@@ -428,10 +428,8 @@ function gameOver() {
       method: "POST",
       body: JSON.stringify(
         {
-        // highscore: {
         username: submitScoreForm.username.value,
         score: finalScore.innerText
-        // }
       }),
       headers: {
         "Content-Type": "application/json"
