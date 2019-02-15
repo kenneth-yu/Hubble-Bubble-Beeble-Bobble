@@ -31,6 +31,8 @@ var killCount = 0;
 var invincible = 'false'
 var lives = 10
 var direction = 'left'
+var enemyTypeList = ['lavaBot', 'enemy'];
+var arrayOfLavaBots = [];
 
 
 function preload ()
@@ -49,6 +51,7 @@ function preload ()
 
   this.load.spritesheet('enemy', '../images/enemiesNew.png', { frameWidth: 64, frameHeight: 64});
   this.load.spritesheet('roboDeath', '../images/roboDeath.png', { frameWidth: 64, frameHeight: 64});
+  this.load.spritesheet('lavaBot', '../images/lavaBot.png', { frameWidth: 64, frameHeight: 64});
 
 }
 
@@ -95,6 +98,20 @@ function create (){
   this.anims.create({
       key: 'roboDeathRight',
       frames: this.anims.generateFrameNumbers('roboDeath', { start: 4, end: 8 }),
+      frameRate: 10,
+      // repeat: -1
+  });
+
+  // Lava Bot, left and right animation
+  this.anims.create({
+    key: 'lavaLeft',
+    frames: this.anims.generateFrameNumbers('lavaBot', { start: 0, end: 1}),
+    frameRate: 10,
+    // repeat: -1
+  });
+  this.anims.create({
+      key: 'lavaRight',
+      frames: this.anims.generateFrameNumbers('lavaBot', { start: 2, end: 3 }),
       frameRate: 10,
       // repeat: -1
   });
@@ -183,8 +200,10 @@ function create (){
   this.physics.add.collider(realEnemy, platforms);
   // this.physics.add.collider(enemy, player, playerWasHit, null, this);
   this.physics.add.overlap(player, arrayOfEnemies, playerWasHit, null, this);
-
   this.physics.add.overlap(arrayOfBubbles, arrayOfEnemies, bubbleHitEnemy, null, this);
+  this.physics.add.overlap(player, arrayOfLavaBots, playerWasHit, null, this);
+  this.physics.add.overlap(arrayOfBubbles, arrayOfLavaBots, bubbleHitEnemy, null, this);
+
 
     // this.physics.add.collider(bullet, realEnemy);
     // realEnemy.body.onCollide = new Phaser.Signal();
@@ -198,11 +217,19 @@ function create (){
 function bubbleHitEnemy(bubble, enemy) {
   // Kill Enemy on Hit
   let index = arrayOfEnemies.indexOf(enemy);
+  let lavaIndex = arrayOfLavaBots.indexOf(enemy);
+  // debugger
   if (index > -1) {
     arrayOfEnemies.splice(index, 1);
-  } else {
-    arrayOfEnemies.pop();
+  // } else if (index === -1) {
+  //   arrayOfEnemies.pop();
+  } else if (lavaIndex > -1) {
+    arrayOfLavaBots.splice(lavaIndex, 1);
+  // } else if (lavaIndex === -1) {
+  //   arrayOfLavaBots.pop();
   }
+
+
   if (enemy.body.velocity.x >= 0) {
     enemy.body.velocity.x = -200
     enemy.anims.play('roboDeathRight', true)
@@ -252,7 +279,7 @@ function playerWasHit(player, enemy) {
 function update (time) {
   var cursors = this.input.keyboard.createCursorKeys();
   var spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-  var zButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
+  // var zButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
 
   //PLAYER MOVEMENTS --------------------------------------------------------------------
   if (cursors.left.isDown) {
@@ -346,7 +373,7 @@ function update (time) {
 
 
   // Real Enemy Chase
-  if (arrayOfEnemies.length > 0) {
+  if (arrayOfEnemies.length + arrayOfLavaBots.length > 0) {
     arrayOfEnemies.forEach(enemy => {
       if (Math.round(enemy.x / 100)*100 > Math.round(player.x / 100)*100) {
         enemy.setVelocityX(-200);
@@ -358,22 +385,39 @@ function update (time) {
         setTimeout(function() {enemy.setVelocityY(-240)}, 300);
       }
     })
+    arrayOfLavaBots.forEach(enemy => {
+      if (Math.round(enemy.x / 100)*100 > Math.round(player.x / 100)*100) {
+        enemy.setVelocityX(-200);
+        enemy.anims.play('lavaLeft', true);
+      } else if (Math.round(enemy.x / 100)*100 < Math.round(player.x / 100)*100) {
+        enemy.setVelocityX(200);
+        enemy.anims.play('lavaRight', true);
+      } else if (Math.floor(enemy.y / 100)*100 > Math.floor(player.y / 100)*100 && enemy.body.touching.down) {
+        setTimeout(function() {enemy.setVelocityY(-240)}, 300);
+      }
+    })
   }
   // Real Enemy end
   //ENEMY MOVEMENTS START ------------------------------------------------------
 
   // New Enemy Spawning
-  if (arrayOfEnemies.length < 3) {
+  if (arrayOfEnemies.length + arrayOfLavaBots.length < 3) {
     let w = Math.random() * (800 - 100) + 100;
     let h = Math.random() * (500 - 100) + 100;
-    const newEnemy = this.physics.add.sprite(w, h, 'enemy');
+    let enemyType = enemyTypeList[Math.floor(Math.random() * enemyTypeList.length)];
+    // debugger
+    const newEnemy = this.physics.add.sprite(w, h, enemyType);
     // newEnemy.setBounce(0);
     newEnemy.setCollideWorldBounds(true);
     newEnemy.body.checkCollision.up = false
     //
     this.physics.add.collider(newEnemy, platforms);
     // this.physics.add.collider(newEnemy, player);
-    arrayOfEnemies.push(newEnemy)
+    if (enemyType === "enemy") {
+      arrayOfEnemies.push(newEnemy)
+    } else {
+      arrayOfLavaBots.push(newEnemy)
+    }
   }
 
   //  Manual New Enemy Spawning
@@ -389,7 +433,6 @@ function update (time) {
 
   if (arrayOfBubbles.length > 0) {
   arrayOfBubbles.forEach(bubble => {
-    // debugger
     if (bubble.body.checkWorldBounds()) {
       let index = arrayOfBubbles.indexOf(bubble);
       if (index > -1) {
