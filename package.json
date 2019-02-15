@@ -1,0 +1,25 @@
+{
+  "start": "node server.js",
+  "name": "hubbabubbabeeblebobble",
+  "version": "1.0.0",
+  "description": "Javascript Game",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.16.4",
+    "phaser": "^3.16.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kenneth-yu/hubbabubbabeeblebobble.git"
+  },
+  "author": "Kenneth Yu, Leizl Samano",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kenneth-yu/hubbabubbabeeblebobble/issues"
+  },
+  "homepage": "https://github.com/kenneth-yu/hubbabubbabeeblebobble#readme"
+}
