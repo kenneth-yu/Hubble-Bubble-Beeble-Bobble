@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', async() =>{
   scoresLocation = document.getElementById('scores')
   allSprites = await getAllSprites()
   highScores = await getHighScores()
+  console.log(highScores)
   console.log(scoresLocation)
   iterateHighScores(highScores, scoresLocation);
 })
