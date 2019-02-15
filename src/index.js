@@ -22,7 +22,6 @@ function highScoreHTML(highScore){
 
 }
 
-
 document.addEventListener('DOMContentLoaded', async() =>{
   scoresLocation = document.getElementById('highscores')
   console.log(scoresLocation.innerHTML)

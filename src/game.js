@@ -413,19 +413,7 @@ function gameOver() {
   document.querySelector("canvas").remove();
   const finalScore = document.getElementById("final-score")
   finalScore.innerText = killCount * 100;
-  // game = new Phaser.Game(config);
-  // score = 0;
-  // scoreText;
-  // lastFired = 0;
-  // arrayOfEnemies;
-  // arrayOfBubbles = [];
-  // bubble;
-  // hurt = 0;
-  // killCount = 0;
-  // invincible = 'false'
-  // lives = 10
-  // direction = 'left'
-  // this.scene.restart();
+
 
   document.getElementById("game-over-screen").style.display = "block"
   const submitScoreForm = document.getElementById("submit-score-form")
@@ -440,10 +428,8 @@ function gameOver() {
       method: "POST",
       body: JSON.stringify(
         {
-        // highscore: {
         username: submitScoreForm.username.value,
         score: finalScore.innerText
-        // }
       }),
       headers: {
         "Content-Type": "application/json"
