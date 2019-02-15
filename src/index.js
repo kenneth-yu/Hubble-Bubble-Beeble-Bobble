@@ -8,10 +8,25 @@ function getHighScores(){
   .then(res => res.json())
 }
 
+function iterateHighScores(highScores, scoresLocation){
+  scoresLocation.innerHTML = highScores.map(highScoreHTML).join('')
+}
+
+function highScoreHTML(highScore){
+  return `
+  <tr id='scores'>
+    <td>${highScore.username}</td>
+    <td>${highScore.score}</td>
+  </tr>
+  `
+
+}
+
 
 document.addEventListener('DOMContentLoaded', async() =>{
+  scoresLocation = document.getElementById('scores')
   allSprites = await getAllSprites()
   highScores = await getHighScores()
-  console.log(allSprites)
-  console.log(highScores)
+  console.log(scoresLocation)
+  iterateHighScores(highScores, scoresLocation);
 })
