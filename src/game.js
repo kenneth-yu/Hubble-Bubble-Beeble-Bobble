@@ -60,7 +60,7 @@ function create (){
   bg = this.add.tileSprite(0, 0, 1600, 1200, 'background');
 
   // Player
-  player = this.physics.add.sprite(100, 450, 'bluedragon');
+  player = this.physics.add.sprite(100, 200, 'bluedragon');
   player.setBounce(0);
   player.setCollideWorldBounds(true);
 
@@ -282,18 +282,7 @@ function update (time) {
   // var zButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
 
   //PLAYER MOVEMENTS --------------------------------------------------------------------
-  if (cursors.left.isDown) {
-      player.setVelocityX(-300);
-      player.anims.play('left', true);
-      direction = 'left'
-  }
-  else if (cursors.right.isDown) {
-    // console.log("i tried to move right")
-      player.setVelocityX(300);
-      player.anims.play('right', true);
-      direction = 'right'
-  }
-  else if (Phaser.Input.Keyboard.JustDown(spaceBar)){
+  if (Phaser.Input.Keyboard.JustDown(spaceBar)){
     const newBubble = this.physics.add.sprite(player.x, player.y, 'bluebubbles');
     this.physics.add.collider(newBubble, enemy);
     this.physics.add.collider(newBubble, realEnemy);
@@ -333,6 +322,17 @@ function update (time) {
       newBubble.anims.play('bubbles', true)
     }
 
+  }
+  if (cursors.left.isDown) {
+      player.setVelocityX(-300);
+      player.anims.play('left', true);
+      direction = 'left'
+  }
+  else if (cursors.right.isDown) {
+    // console.log("i tried to move right")
+      player.setVelocityX(300);
+      player.anims.play('right', true);
+      direction = 'right'
   }
   else {
       player.setVelocityX(0);

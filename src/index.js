@@ -9,7 +9,10 @@ function getHighScores(){
 }
 
 function iterateHighScores(highScores, scoresLocation){
-  scoresLocation.innerHTML += highScores.map(highScoreHTML).join('')
+ const orderedHighScores = highScores.sort(function(a, b){
+   return b.score-a.score
+ })
+ scoresLocation.innerHTML += orderedHighScores.map(highScoreHTML).join('')
 }
 
 function highScoreHTML(highScore){
