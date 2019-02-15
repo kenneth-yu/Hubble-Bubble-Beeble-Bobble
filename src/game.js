@@ -349,10 +349,10 @@ function update (time) {
   if (arrayOfEnemies.length > 0) {
     arrayOfEnemies.forEach(enemy => {
       if (Math.round(enemy.x / 100)*100 > Math.round(player.x / 100)*100) {
-        enemy.setVelocityX(-200);
+        enemy.setVelocityX(-150);
         enemy.anims.play('enemyleft', true);
       } else if (Math.round(enemy.x / 100)*100 < Math.round(player.x / 100)*100) {
-        enemy.setVelocityX(200);
+        enemy.setVelocityX(150);
         enemy.anims.play('enemyright', true);
       } else if (Math.floor(enemy.y / 100)*100 > Math.floor(player.y / 100)*100 && enemy.body.touching.down) {
         setTimeout(function() {enemy.setVelocityY(-240)}, 300);
@@ -450,6 +450,11 @@ function gameOver() {
       }
     })
     .then(res => res.json())
-    .then(data => console.log(data))
+    .then(data => putHighScoreOnTheDom(data))
+  }
+
+  function putHighScoreOnTheDom(data){
+    scoresLocation = document.getElementById('highscores')
+    scoresLocation.innerHTML += highScoreHTML(data)
   }
 }
