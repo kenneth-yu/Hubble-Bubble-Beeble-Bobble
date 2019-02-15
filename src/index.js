@@ -6,7 +6,6 @@ function getAllSprites(){
 function getHighScores(){
   return fetch('http://localhost:3000/api/v1/highscores')
   .then(res => res.json())
-  .then(data => console.log(data))
 }
 
 function iterateHighScores(highScores, scoresLocation){
@@ -24,9 +23,10 @@ function highScoreHTML(highScore){
 }
 
 document.addEventListener('DOMContentLoaded', async() =>{
-  const scoresLocation = document.getElementById('scores')
-  const allSprites = await getAllSprites()
-  const highScores = await getHighScores()
+  scoresLocation = document.getElementById('scores')
+  allSprites = await getAllSprites()
+  highScores = await getHighScores()
+  console.log(highScores)
   console.log(scoresLocation)
   iterateHighScores(highScores, scoresLocation);
 })
