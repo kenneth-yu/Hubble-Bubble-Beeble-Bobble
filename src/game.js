@@ -410,8 +410,8 @@ function update (time) {
 
 function gameOver() {
   // game.scene.restart();
-  // document.querySelector("canvas").remove();
-  // document.getElementById("final-score").innerText = killCount * 100;
+  document.querySelector("canvas").remove();
+  document.getElementById("final-score").innerText = killCount * 100;
   // game = new Phaser.Game(config);
   // score = 0;
   // scoreText;
@@ -430,6 +430,6 @@ function gameOver() {
   // <h1>GAME OVER!</h1>
   //
   // `
-  // document.getElementById("game-over-screen").style.display = "block"
+  document.getElementById("game-over-screen").style.display = "block"
 
 }
