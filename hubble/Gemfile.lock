@@ -151,13 +151,7 @@ DEPENDENCIES
   puma (~> 3.11)
   rack-cors
   rails (~> 5.2.2)
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
   rb-readline
-=======
->>>>>>> master
->>>>>>> 14d6cb79119096c4bf4905ffde8ed40ab571d9b8
   spring
   spring-watcher-listen (~> 2.0.0)
   tzinfo-data
