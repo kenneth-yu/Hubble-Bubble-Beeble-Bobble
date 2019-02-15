@@ -1,3 +1,3 @@
 class HighscoreSerializer < ActiveModel::Serializer
-  attributes :id
+  attributes :id, :score, :username
 end

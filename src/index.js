@@ -6,6 +6,7 @@ function getAllSprites(){
 function getHighScores(){
   return fetch('http://localhost:3000/api/v1/highscores')
   .then(res => res.json())
+  .then(data => console.log(data))
 }
 
 document.addEventListener('DOMContentLoaded', async() =>{
@@ -13,4 +14,7 @@ document.addEventListener('DOMContentLoaded', async() =>{
   highScores = await getHighScores()
   console.log(allSprites)
   console.log(highScores)
+
+  
+
 })

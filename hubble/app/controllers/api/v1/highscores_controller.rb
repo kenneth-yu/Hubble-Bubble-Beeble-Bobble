@@ -30,7 +30,7 @@ class Api::V1::HighscoresController < ApplicationController
   private
 
   def highscore_params
-    params.permit(:username, :score, :playable_sprite_id)
+    params.permit(:username, :score)
   end
 
   def find_highscore
