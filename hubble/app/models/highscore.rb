@@ -1,3 +1,3 @@
 class Highscore < ApplicationRecord
-  belongs_to :playable_sprite
+  # belongs_to :playable_sprite
 end

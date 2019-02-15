@@ -411,7 +411,8 @@ function update (time) {
 function gameOver() {
   // game.scene.restart();
   document.querySelector("canvas").remove();
-  document.getElementById("final-score").innerText = killCount * 100;
+  const finalScore = document.getElementById("final-score")
+  finalScore.innerText = killCount * 100;
   // game = new Phaser.Game(config);
   // score = 0;
   // scoreText;
@@ -426,10 +427,29 @@ function gameOver() {
   // direction = 'left'
   // this.scene.restart();
 
-  // document.body.innerHTML = `
-  // <h1>GAME OVER!</h1>
-  //
-  // `
   document.getElementById("game-over-screen").style.display = "block"
-
+  const submitScoreForm = document.getElementById("submit-score-form")
+  addEventToHighScoreForm();
+  function addEventToHighScoreForm() {
+    submitScoreForm.addEventListener("submit", postFetchForHighScore)
+  }
+  function postFetchForHighScore(event) {
+    event.preventDefault();
+    console.log("submit!");
+    fetch('http://localhost:3000/api/v1/highscores', {
+      method: "POST",
+      body: JSON.stringify(
+        {
+        // highscore: {
+        username: submitScoreForm.username.value,
+        score: finalScore.innerText
+        // }
+      }),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+    .then(res => res.json())
+    .then(data => console.log(data))
+  }
 }
