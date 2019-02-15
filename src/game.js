@@ -26,11 +26,10 @@ var lastFired = 0;
 var arrayOfEnemies;
 var arrayOfBubbles = [];
 var bubble;
-var weapon;
 var hurt = 0;
 var killCount = 0;
 var invincible = 'false'
-var lives = 10
+var lives = 2
 var direction = 'left'
 
 
@@ -72,7 +71,6 @@ function create ()
   realEnemy.setCollideWorldBounds(true);
 
   arrayOfEnemies = [realEnemy]
-  // debugger
 
   // Robo Enemy, left and right animation
   this.anims.create({
@@ -142,6 +140,8 @@ function create ()
       frameRate: 10,
       // repeat: -1
   });
+
+  // Bubble shooting animations
   this.anims.create({
     key: 'pewleft',
     // frames: this.anims.generateFrameNumbers('bluedragon', {start: 8, end: 13}),
@@ -402,6 +402,32 @@ function update (time) {
   }
 
   if (lives <= 0){
-    // this.sound.play('death')
+    gameOver();
   }
+}
+
+function gameOver() {
+  // game.scene.restart();
+  // document.querySelector("canvas").remove();
+  // document.getElementById("final-score").innerText = killCount * 100;
+  // game = new Phaser.Game(config);
+  // score = 0;
+  // scoreText;
+  // lastFired = 0;
+  // arrayOfEnemies;
+  // arrayOfBubbles = [];
+  // bubble;
+  // hurt = 0;
+  // killCount = 0;
+  // invincible = 'false'
+  // lives = 10
+  // direction = 'left'
+  // this.scene.restart();
+
+  // document.body.innerHTML = `
+  // <h1>GAME OVER!</h1>
+  //
+  // `
+  // document.getElementById("game-over-screen").style.display = "block"
+
 }
