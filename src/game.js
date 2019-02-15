@@ -41,6 +41,7 @@ function preload ()
   this.load.spritesheet('bluedragon', '../images/bluedragon.png', { frameWidth: 64, frameHeight: 64});
   this.load.spritesheet('greendragon', '../images/greendragon.png',{ frameWidth: 64, frameHeight: 64});
   this.load.spritesheet('bluebubbles', '../images/bluebubbles.png',{ frameWidth: 64, frameHeight: 64});
+  this.load.spritesheet('cheese', '../images/cheese.png',{ frameWidth: 64, frameHeight: 64 });
   this.load.image('ground', '../images/platform.png');
   this.load.image('background', '../images/forestbackground.png');
   this.load.audio('death', '../audio/death.mp3');
@@ -65,7 +66,7 @@ function create (){
   player.setCollideWorldBounds(true);
 
   // Green Friend
-  enemy = this.physics.add.sprite(600, 450, 'greendragon');
+  enemy = this.physics.add.sprite(600, 450, 'cheese');
   enemy.setBounce(0);
   enemy.setCollideWorldBounds(true);
 
@@ -358,18 +359,18 @@ function update (time) {
   // else if (player.y < 180 &&  enemy.y > 500 ){
   //   console.log("Blue is on Platform 3 and Green is on the Ground")
   // }
-  if (Math.round(enemy.x / 100)*100 > Math.round(player.x / 100)*100) {
-    enemy.setVelocityX(-150);
-    enemy.anims.play('greenleft', true);
-  }  else if (Math.round(enemy.x / 100)*100 < Math.round(player.x / 100)*100){
-    enemy.setVelocityX(150);
-    enemy.anims.play('greenright', true);
-    // enemy.setVelocityX(0);
-    // player.anims.play('turnRight');
-  } else if (Math.floor(enemy.y / 100)*100 > Math.floor(player.y / 100)*100 && enemy.body.touching.down){
-    enemy.body.checkCollision.up = false
-    setTimeout(function() {enemy.setVelocityY(-260)}, 200);
-  }
+  // if (Math.round(enemy.x / 100)*100 > Math.round(player.x / 100)*100) {
+  //   enemy.setVelocityX(-150);
+  //   enemy.anims.play('greenleft', true);
+  // }  else if (Math.round(enemy.x / 100)*100 < Math.round(player.x / 100)*100){
+  //   enemy.setVelocityX(150);
+  //   enemy.anims.play('greenright', true);
+  //   // enemy.setVelocityX(0);
+  //   // player.anims.play('turnRight');
+  // } else if (Math.floor(enemy.y / 100)*100 > Math.floor(player.y / 100)*100 && enemy.body.touching.down){
+  //   enemy.body.checkCollision.up = false
+  //   setTimeout(function() {enemy.setVelocityY(-260)}, 200);
+  // }
 
 
   // Real Enemy Chase
