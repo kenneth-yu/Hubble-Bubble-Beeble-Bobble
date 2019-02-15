@@ -8,6 +8,7 @@ function getHighScores(){
   .then(res => res.json())
 }
 
+
 document.addEventListener('DOMContentLoaded', async() =>{
   allSprites = await getAllSprites()
   highScores = await getHighScores()

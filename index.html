@@ -3,22 +3,42 @@
 <head>
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script>
     <script src="/src/game.js"></script>
-    <script src="/src/index.js"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<!-- <audio src="/audio/theme.mp3" autoplay="autoplay" loop="loop"></audio> -->
-<!-- <audio controls autoplay>
-  <source src="/audio/theme.mp3" type="audio/mpeg">
-  Your browser does not support the audio element.
-</audio> -->
-<div id="game-over-screen" style="display:none">
-  <h1>GAME OVER!</h1>
-  <h3>Submit your name and high score.</h3>
-  <h4 id="final-score"></h4>
-  <form id="submit-score-form">
-    <input type="text" name="username" placeholder="Your Name">
-    <input type="submit" value="Submit Score!">
-  </form>
-</div>
+  <script>
+  </script>
+  <div id="game-over-screen" style="display:none">
+    <h1>GAME OVER!</h1>
+    <h3>Submit your name and high score.</h3>
+    <h4 id="final-score"></h4>
+    <form id="submit-score-form">
+      <input type="text" name="username" placeholder="Your Name">
+      <input type="submit" value="Submit Score!">
+    </form>
+  </div>
+
+  <table id="highscores">
+    <tr>
+      <th style="text-align: center; border: 1px solid white; border-bottom: 1px solid black;" colspan="2">Highscores</th>
+    </tr>
+    <tr>
+      <th>Name</th>
+      <th>Score</th>
+    </tr>
+    <tr>
+      <!-- <td>Hi
+      </td>
+      <td>3
+      </td> -->
+    </tr>
+    <tr>
+      <td>
+      </td>
+      <td>
+      </td>
+    </tr>
+  </table>
+
 </body>
 </html>

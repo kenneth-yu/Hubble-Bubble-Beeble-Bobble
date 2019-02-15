@@ -29,7 +29,7 @@ var bubble;
 var hurt = 0;
 var killCount = 0;
 var invincible = 'false'
-var lives = 2
+var lives = 10
 var direction = 'left'
 
 
