@@ -44,6 +44,7 @@ function preload ()
   this.load.audio('death', '../audio/death.mp3');
   this.load.audio('jump', '../audio/jump.mp3');
   this.load.audio('shootbubble', '../audio/shootbubble.mp3');
+  this.load.audio('theme', '../audio/theme.mp3');
   // this.load.image('projectile', '../images/greenbubbles.png', {frameWidth: 64, frameHeight: 64});
 
   this.load.spritesheet('enemy', '../images/enemiesNew.png', { frameWidth: 64, frameHeight: 64});
@@ -51,8 +52,8 @@ function preload ()
 
 }
 
-function create ()
-{
+function create (){
+  this.sound.play('theme', {loop:true})
   bg = this.add.tileSprite(0, 0, 1600, 1200, 'background');
 
   // Player
@@ -368,6 +369,7 @@ function update (time) {
     const newEnemy = this.physics.add.sprite(w, h, 'enemy');
     // newEnemy.setBounce(0);
     newEnemy.setCollideWorldBounds(true);
+    newEnemy.body.checkCollision.up = false
     //
     this.physics.add.collider(newEnemy, platforms);
     // this.physics.add.collider(newEnemy, player);
