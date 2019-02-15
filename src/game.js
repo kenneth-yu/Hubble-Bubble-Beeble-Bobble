@@ -411,12 +411,8 @@ function update (time) {
 function gameOver() {
   // game.scene.restart();
   document.querySelector("canvas").remove();
-<<<<<<< HEAD
   const finalScore = document.getElementById("final-score")
   finalScore.innerText = killCount * 100;
-=======
-  document.getElementById("final-score").innerText = killCount * 100;
->>>>>>> ad71bba39fe6c69c22e1d13ccad239c2a0d5bbe6
   // game = new Phaser.Game(config);
   // score = 0;
   // scoreText;
@@ -431,7 +427,6 @@ function gameOver() {
   // direction = 'left'
   // this.scene.restart();
 
-<<<<<<< HEAD
   document.getElementById("game-over-screen").style.display = "block"
   const submitScoreForm = document.getElementById("submit-score-form")
   addEventToHighScoreForm();
@@ -457,12 +452,4 @@ function gameOver() {
     .then(res => res.json())
     .then(data => console.log(data))
   }
-=======
-  // document.body.innerHTML = `
-  // <h1>GAME OVER!</h1>
-  //
-  // `
-  document.getElementById("game-over-screen").style.display = "block"
-
->>>>>>> ad71bba39fe6c69c22e1d13ccad239c2a0d5bbe6
 }
