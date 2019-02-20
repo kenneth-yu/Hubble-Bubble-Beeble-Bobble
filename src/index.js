@@ -28,7 +28,7 @@ function highScoreHTML(highScore){
 document.addEventListener('DOMContentLoaded', async() =>{
   scoresLocation = document.getElementById('highscores')
   // console.log(scoresLocation.innerHTML)
-  allSprites = await getAllSprites()
+  // allSprites = await getAllSprites()
   highScores = await getHighScores()
   // console.log(highScores)
   // console.log(scoresLocation)
