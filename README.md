@@ -1,4 +1,4 @@
-# hubba bubba beeble bobble
+# Hubba Bubba Beeble Bobble
 
 Front-end is deployed at: https://hubble-bubble-beeble-bobble.firebaseapp.com/
 
