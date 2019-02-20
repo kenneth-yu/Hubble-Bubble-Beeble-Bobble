@@ -468,7 +468,7 @@ function gameOver() {
   function postFetchForHighScore(event) {
     event.preventDefault();
     console.log("submit!");
-    fetch('http://localhost:3000/api/v1/highscores', {
+    fetch('https://hubble-bubble-backend.herokuapp.com/api/v1/highscores', {
       method: "POST",
       body: JSON.stringify(
         {
