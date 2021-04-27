@@ -1,4 +1,4 @@
-# Hubba Bubba Beeble Bobble
+# Hubble Bubble Beeble Bobble
 
 A fun game created using JavaScript and the Phazer 3 Game Library. Use the Arrow Keys to Move and the Space Bar to shoot bubbles! Defeat as many enemys as possible and rack up the highest score!
 
